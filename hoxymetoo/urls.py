@@ -16,11 +16,13 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 from rest_framework import routers
-from members import views
+from members.views import MemberViewSet
+from welfares.views import WelfareViewSet
 
 
 router = routers.DefaultRouter(trailing_slash=False)
-router.register('members', views.MemberViewSet, basename="members")
+router.register('members', MemberViewSet, basename="members")
+router.register('welfares', WelfareViewSet, basename="welfares")
 
 
 urlpatterns = [
