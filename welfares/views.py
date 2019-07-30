@@ -1,3 +1,8 @@
-from django.shortcuts import render
+from .models import Welfare
+from .serializers import WelfareSerializer
+from rest_framework import viewsets
 
-# Create your views here.
+
+class WelfareViewSet(viewsets.ModelViewSet):
+    queryset = Welfare.objects.all()
+    serializer_class = WelfareSerializer
