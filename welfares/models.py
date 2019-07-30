@@ -29,8 +29,16 @@ class Obstkiarray(models.Model):
 
 
 class Disable(models.Model):
-    obstlvid = models.ForeignKey(Obstlvarray)
-    obstkiid = models.ForeignKey(Obstkiarray)
+    obstlvid = models.ForeignKey(
+        Obstlvarray,
+        on_delete=models.CASCADE,
+        db_column='obstlvid'
+    )
+    obstkiid = models.ForeignKey(
+        Obstkiarray,
+        on_delete=models.CASCADE,
+        db_column='obstkiid'
+    )
 
     class Meta:
         db_table = 'Disable'
@@ -129,55 +137,112 @@ class Welfare(models.Model):
 
 
 class Weltrgterindvdl(models.Model):
-    welid = models.ForeignKey(Welfare)
-    trgterindvdlid = models.ForeignKey(Trgterindvdlarray)
+    welid = models.ForeignKey(
+        Welfare,
+        on_delete=models.CASCADE,
+        db_column='welid'
+    )
+    trgterindvdlid = models.ForeignKey(
+        Trgterindvdlarray,
+        on_delete=models.CASCADE,
+        db_column='trgterindvdlid'
+    )
 
     class Meta:
         db_table = 'Weltrgterindvdl'
 
 
 class Weldesire(models.Model):
-    welid = models.ForeignKey(Welfare)
-    desireid = models.ForeignKey(Desirearray)
+    welid = models.ForeignKey(
+        Welfare,
+        on_delete=models.CASCADE,
+        db_column='welid'
+    )
+    desireid = models.ForeignKey(
+        Desirearray,
+        on_delete=models.CASCADE,
+        db_column='desireid'
+    )
 
     class Meta:
         db_table = 'Weldesire'
 
 
 class Weldisable(models.Model):
-    welid = models.ForeignKey(Welfare)
-    disableid = models.ForeignKey(Disable)
+    welid = models.ForeignKey(
+        Welfare,
+        on_delete=models.CASCADE,
+        db_column = 'welid'
+    )
+    disableid = models.ForeignKey(
+        Disable,
+        on_delete=models.CASCADE,
+        db_column = 'disableid'
+    )
 
     class Meta:
         db_table = 'Weldisable'
 
 
 class Welchartrgter(models.Model):
-    welid = models.ForeignKey(Welfare)
-    chartrgterid = models.ForeignKey(Chartrgterarray)
+    welid = models.ForeignKey(
+        Welfare,
+        on_delete=models.CASCADE,
+        db_column='welid'
+    )
+    chartrgterid = models.ForeignKey(
+        Chartrgterarray,
+        on_delete=models.CASCADE,
+        db_column='chartrgterid'
+    )
 
     class Meta:
         db_table = 'Welchartrgter'
 
 
 class Wellife(models.Model):
-    welid = models.ForeignKey(Welfare)
-    lifeid = models.ForeignKey(Lifearray)
+    welid = models.ForeignKey(
+        Welfare,
+        on_delete=models.CASCADE,
+        db_column='welid'
+    )
+    lifeid = models.ForeignKey(
+        Lifearray,
+        on_delete=models.CASCADE,
+        db_column='lifeid'
+    )
 
     class Meta:
         db_table = 'Wellife'
 
 
 class Weljurmnof(models.Model):
-    welid = models.ForeignKey(Welfare)
-    jurmnofid = models.ForeignKey(Jurmnof)
+    welid = models.ForeignKey(
+        Welfare,
+        on_delete=models.CASCADE,
+        db_column='welid'
+    )
+    jurmnofid = models.ForeignKey(
+        Jurmnof,
+        on_delete=models.CASCADE,
+        db_column='jurmnofid'
+    )
 
     class Meta:
         db_table = 'Weljurmnof'
 
+
 class Weljurorg(models.Model):
-    welid = models.ForeignKey(Welfare)
-    jurorg = models.ForeignKey(Jurorg)
+    welid = models.ForeignKey(
+        Welfare,
+        on_delete=models.CASCADE,
+        db_column='welid'
+    )
+    jurorgid = models.ForeignKey(
+        Jurorg,
+        on_delete=models.CASCADE,
+        db_column='jurorgid'
+    )
 
     class Meta:
         db_table = 'Weljurorg'

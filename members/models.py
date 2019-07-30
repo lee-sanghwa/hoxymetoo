@@ -55,24 +55,48 @@ class Member(models.Model):
 
 
 class Memjob(models.Model):
-    memid = models.ForeignKey(Member)
-    jobid = models.ForeignKey(Job)
+    memid = models.ForeignKey(
+        Member,
+        on_delete= models.CASCADE,
+        db_column= 'memid'
+    )
+    jobid = models.ForeignKey(
+        Job,
+        on_delete=models.CASCADE,
+        db_column='jobid'
+    )
 
     class Meta:
         db_table = 'Memjob'
 
 
 class Memdisable(models.Model):
-    memid = models.ForeignKey(Member)
-    disableid = models.ForeignKey(Disable)
+    memid = models.ForeignKey(
+        Member,
+        on_delete= models.CASCADE,
+        db_column = 'memid'
+    )
+    disableid = models.ForeignKey(
+        Disable,
+        on_delete= models.CASCADE,
+        db_column = 'disableid'
+    )
 
     class Meta:
         db_table = 'Memdisable'
 
 
 class Memwelfare(models.Model):
-    memid = models.ForeignKey(Member)
-    welid = models.ForeignKey(Welfare)
+    memid = models.ForeignKey(
+        Member,
+        on_delete=models.CASCADE,
+        db_column='memid'
+    )
+    welid = models.ForeignKey(
+        Welfare,
+        on_delete=models.CASCADE,
+        db_column='welid'
+    )
     cdatetime = models.CharField(max_length=14)
     cdate = models.CharField(max_length=8)
     ctime = models.CharField(max_length=6)
