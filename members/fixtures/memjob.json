@@ -1,0 +1,10 @@
+[
+  {
+    "model": "members.Memjob",
+    "pk": 1,
+    "fields": {
+      "memid": 1,
+      "jobid": 1
+    }
+  }
+]

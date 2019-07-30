@@ -1,0 +1,50 @@
+[
+  {
+    "model": "welfares.Obstlvarray",
+    "pk": 1,
+    "fields": {
+      "obstlvid": 1,
+      "obstlvname": "1급"
+    }
+  },
+  {
+    "model": "welfares.Obstlvarray",
+    "pk": 2,
+    "fields": {
+      "obstlvid": 2,
+      "obstlvname": "2급"
+    }
+  },
+  {
+    "model": "welfares.Obstlvarray",
+    "pk": 3,
+    "fields": {
+      "obstlvid": 3,
+      "obstlvname": "3급"
+    }
+  },
+  {
+    "model": "welfares.Obstlvarray",
+    "pk": 4,
+    "fields": {
+      "obstlvid": 4,
+      "obstlvname": "4급"
+    }
+  },
+  {
+    "model": "welfares.Obstlvarray",
+    "pk": 5,
+    "fields": {
+      "obstlvid": 5,
+      "obstlvname": "5급"
+    }
+  },
+  {
+    "model": "welfares.Obstlvarray",
+    "pk": 6,
+    "fields": {
+      "obstlvid": 6,
+      "obstlvname": "6급"
+    }
+  }
+]
