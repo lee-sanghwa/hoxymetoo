@@ -1,0 +1,10 @@
+[
+  {
+    "model": "welfares.Disable",
+    "pk": 1,
+    "fields": {
+      "obstlvid": 1,
+      "obstkiid": 1
+    }
+  }
+]

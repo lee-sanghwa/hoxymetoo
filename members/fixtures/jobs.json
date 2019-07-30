@@ -1,0 +1,18 @@
+[
+  {
+    "model": "members.Job",
+    "pk": 1,
+    "fields": {
+      "jobid": 1001,
+      "name": "학생"
+    }
+  },
+  {
+    "model": "members.Job",
+    "pk": 2,
+    "fields": {
+      "jobid": 1002,
+      "name": "주부"
+    }
+  }
+]

@@ -1,0 +1,26 @@
+[
+  {
+    "model": "members.Member",
+    "pk": 1,
+    "fields": {
+      "memid": 100000001,
+      "socialid": "facebook_test000000001",
+      "pushtoken": "push_test000000001",
+      "memkey": "E0D3B72F72183185C11356D4F280CECEB336622FBAB3B4F4FBE6AF73CA4DBCBC",
+      "email": "test000000001",
+      "password": "123456",
+      "st_birthday": "000101",
+      "st_gender": 1,
+      "st_family": 5,
+      "st_income": 3,
+      "st_bohun": 0,
+      "st_address": "대한민국 서울시 선릉역 소프트웨어마에스트로",
+      "cdatetime": "20190723215934",
+      "cdate": "20190723",
+      "ctime": "215934",
+      "udatetime": "20190723215934",
+      "udate": "20190723",
+      "utime": "215934"
+    }
+  }
+]
