@@ -33,7 +33,7 @@ class MemberSerializer(serializers.ModelSerializer):
             welfare_instance = Welfare.objects.get(id=welfare)
             memwelfare_data = {
                 'memid': instance,
-                'welfareid': welfare_instance
+                'welid': welfare_instance
             }
             Memwelfare.objects.create(**memwelfare_data)
 
@@ -125,12 +125,6 @@ class MemberSerializer(serializers.ModelSerializer):
         many=True,
         read_only=True,
         slug_field='name'
-    )
-
-    welfares = serializers.SlugRelatedField(
-        many=True,
-        read_only=True,
-        slug_field='servicename'
     )
 
     class Meta:
