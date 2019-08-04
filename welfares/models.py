@@ -12,7 +12,6 @@ class Trgterindvdlarray(models.Model):
 
 
 class Obstlvarray(models.Model):
-    obstlvid = models.IntegerField(unique=True)
     obstlvname = models.CharField(max_length=7, unique=True)
 
     class Meta:
@@ -20,8 +19,7 @@ class Obstlvarray(models.Model):
 
 
 class Obstkiarray(models.Model):
-    obstkiid = models.IntegerField(unique=True)
-    obstkiunqid = models.CharField(max_length=2, unique=True)
+    obstkiid = models.CharField(max_length=2, unique=True)
     obstkiname = models.CharField(max_length=15, unique=True)
 
     class Meta:
@@ -39,14 +37,14 @@ class Disable(models.Model):
         on_delete=models.CASCADE,
         db_column='obstkiid'
     )
+    disablename = models.CharField(max_length=31, unique=True)
 
     class Meta:
         db_table = 'Disable'
 
 
 class Desirearray(models.Model):
-    desireid = models.IntegerField(unique=True)
-    desireunqid = models.CharField(max_length=2, unique=True)
+    desireid = models.CharField(max_length=2, unique=True)
     desirename = models.CharField(max_length=31, unique=True)
 
     class Meta:
@@ -68,8 +66,8 @@ class Lifearray(models.Model):
     class Meta:
         db_table = 'Lifearray'
 
+
 class Jurmnof(models.Model):
-    jurmnofid = models.IntegerField(unique=True)
     jurmnofname = models.CharField(max_length=31, unique=True)
 
     class Meta:
@@ -77,32 +75,47 @@ class Jurmnof(models.Model):
 
 
 class Jurorg(models.Model):
-    jurorgid = models.IntegerField(unique=True)
     jurorgname = models.CharField(max_length=31, unique=True)
 
     class Meta:
         db_table = 'Jurorg'
 
 
+class Responsible(models.Model):
+    jurorgid = models.ForeignKey(
+        Jurorg,
+        on_delete=models.CASCADE,
+        db_column='jurorgid'
+    )
+    jurmnofid = models.ForeignKey(
+        Jurmnof,
+        on_delete=models.CASCADE,
+        db_column='jurmnofid'
+    )
+    responsiblename = models.CharField(max_length=63, unique=True)
+
+    class Meta:
+        db_table = 'Responsible'
+
+
 class Welfare(models.Model):
-    welid = models.IntegerField(unique=True)
     serviceid = models.CharField(max_length=63, unique=True)
-    servicename = models.CharField(max_length=127)
-    servicesummary = models.CharField(max_length=255)
-    targetdetail = models.CharField(max_length=511)
-    supportstandard = models.CharField(max_length=511)
-    supportmoney = models.CharField(max_length=511)
-    servicedetail = models.CharField(max_length=65535)
-    servicedetailimage = models.CharField(max_length=511)
-    contactinfoname = models.CharField(max_length=127)
-    contactinfonumber = models.CharField(max_length=31)
-    sitename = models.CharField(max_length=63)
-    sitelink = models.CharField(max_length=255)
-    formname = models.CharField(max_length=63)
-    formlink = models.CharField(max_length=255)
-    lawname = models.CharField(max_length=63)
-    lawlink = models.CharField(max_length=255)
-    registerdate = models.CharField(max_length=100)
+    servicename = models.CharField(max_length=127, blank=True)
+    servicesummary = models.CharField(max_length=255, blank=True)
+    targetdetail = models.TextField(blank=True)
+    supportstandard = models.TextField(blank=True)
+    supportmoney = models.TextField(blank=True)
+    servicedetail = models.TextField(blank=True)
+    servicedetailimage = models.CharField(max_length=511, blank=True)
+    contactinfoname = models.CharField(max_length=127, blank=True)
+    contactinfonumber = models.CharField(max_length=31, blank=True)
+    sitename = models.CharField(max_length=63, blank=True)
+    sitelink = models.CharField(max_length=255, blank=True)
+    formname = models.CharField(max_length=63, blank=True)
+    formlink = models.CharField(max_length=255, blank=True)
+    lawname = models.CharField(max_length=63, blank=True)
+    lawlink = models.CharField(max_length=255, blank=True)
+    registerdate = models.CharField(max_length=100, blank=True)
     housetypes = models.ManyToManyField(
         Trgterindvdlarray,
         through='Weltrgterindvdl'
@@ -122,14 +135,6 @@ class Welfare(models.Model):
     lifetimes = models.ManyToManyField(
         Lifearray,
         through='Wellife'
-    )
-    departments = models.ManyToManyField(
-        Jurmnof,
-        through='Weljurmnof'
-    )
-    organizations = models.ManyToManyField(
-        Jurorg,
-        through='Weljurorg'
     )
 
     class Meta:
@@ -172,12 +177,12 @@ class Weldisable(models.Model):
     welid = models.ForeignKey(
         Welfare,
         on_delete=models.CASCADE,
-        db_column = 'welid'
+        db_column='welid'
     )
     disableid = models.ForeignKey(
         Disable,
         on_delete=models.CASCADE,
-        db_column = 'disableid'
+        db_column='disableid'
     )
 
     class Meta:
@@ -216,35 +221,17 @@ class Wellife(models.Model):
         db_table = 'Wellife'
 
 
-class Weljurmnof(models.Model):
+class Welresponsible(models.Model):
     welid = models.ForeignKey(
         Welfare,
         on_delete=models.CASCADE,
         db_column='welid'
     )
-    jurmnofid = models.ForeignKey(
-        Jurmnof,
+    responsibleid = models.ForeignKey(
+        Responsible,
         on_delete=models.CASCADE,
-        db_column='jurmnofid'
+        db_column='responsibleid'
     )
 
     class Meta:
-        db_table = 'Weljurmnof'
-
-
-class Weljurorg(models.Model):
-    welid = models.ForeignKey(
-        Welfare,
-        on_delete=models.CASCADE,
-        db_column='welid'
-    )
-    jurorgid = models.ForeignKey(
-        Jurorg,
-        on_delete=models.CASCADE,
-        db_column='jurorgid'
-    )
-
-    class Meta:
-        db_table = 'Weljurorg'
-
-
+        db_table = 'Welresponsible'
