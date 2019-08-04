@@ -1,8 +1,9 @@
-from .models import Member
+from .models import Member, Family
 from .serializers import MemberSerializer
 from rest_framework import viewsets
 from datetime import datetime
 import hashlib
+
 
 class MemberViewSet(viewsets.ModelViewSet):
     queryset = Member.objects.all()
@@ -37,3 +38,23 @@ class MemberViewSet(viewsets.ModelViewSet):
         member_data['utime'] = ctime
 
         super().create(request, *args, **kwargs)
+
+    def update(self, request, *args, **kwargs):
+        member_data = request.data
+        now_datetime = datetime.now()
+        udatetime = "%04d%02d%02d%02d%02d%02d" % (
+            now_datetime.year,
+            now_datetime.month,
+            now_datetime.day,
+            now_datetime.hour,
+            now_datetime.minute,
+            now_datetime.second
+        )
+        udate = udatetime[:8]
+        utime = udatetime[8:]
+
+        member_data['udatetime'] = udatetime
+        member_data['udate'] = udate
+        member_data['utime'] = utime
+
+        super().update(request, *args, **kwargs)
