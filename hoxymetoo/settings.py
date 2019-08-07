@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'members',
     'welfares',
-    'qnas'
+    'qnas',
+    'chatbot'
 ]
 
 REST_FRAMEWORK = {

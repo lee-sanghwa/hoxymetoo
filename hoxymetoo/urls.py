@@ -18,10 +18,14 @@ from django.urls import include, path
 from rest_framework import routers
 from members.views import MemberViewSet
 from welfares.views import WelfareViewSet
+from qnas.views import QnaViewSet
+from chatbot.views import ChatbotViewSet
 
 router = routers.DefaultRouter(trailing_slash=False)
 router.register('members', MemberViewSet, basename="members")
 router.register('welfares', WelfareViewSet, basename="welfares")
+router.register('qnas', QnaViewSet, basename="qnas")
+router.register('chatlogs', ChatbotViewSet, basename="chatlogs")
 
 urlpatterns = [
     path('admin/', admin.site.urls),
