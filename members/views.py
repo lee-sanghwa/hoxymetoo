@@ -1,4 +1,4 @@
-from .models import Member, Family
+from .models import Member
 from .serializers import MemberSerializer
 from rest_framework import viewsets
 from datetime import datetime
