@@ -127,7 +127,7 @@ class Member(models.Model):
     # 회원의 거주지 주소 (대한민국 서울시 선릉역 소프트웨어마에스트로)
     memAddress = models.CharField(
         max_length=511,
-        null=True,\
+        null=True,
         db_column='st_address'
     )
     # 회원 정보 생성 일자 + 시간 (20190723215934: 2019년 07월 23알 21시 59분 34초)
