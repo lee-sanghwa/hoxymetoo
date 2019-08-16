@@ -91,7 +91,7 @@ class Member(models.Model):
         db_column='password'
     )
     memReceivableMoney = models.IntegerField(
-        null=True,
+        default=0,
         db_column='receivablemoney'
     )
     # 회원의 생일 (20190807)
