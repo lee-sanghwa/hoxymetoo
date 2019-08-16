@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'welfares',
     'qnas',
     'chatbot',
+    'receivableMoney',
     'debug_toolbar'
 ]
 

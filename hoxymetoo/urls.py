@@ -31,6 +31,7 @@ from members.views import MemberViewSet
 from welfares.views import WelfareViewSet
 from qnas.views import CategoryViewSet, QuestionViewSet, AnswerViewSet, QnaViewSet
 from chatbot.views import ChatBotViewSet
+from receivableMoney.views import MemberReceivableMoneyViewSet
 
 router = routers.DefaultRouter(trailing_slash=False)
 router.register('members', MemberViewSet, basename="members")
@@ -40,6 +41,7 @@ router.register('questions', QuestionViewSet, basename="questions")
 router.register('answers', AnswerViewSet, basename="answers")
 router.register('qnas', QnaViewSet, basename="qnas")
 router.register('chatlogs', ChatBotViewSet, basename="chatlogs")
+router.register('receivablemoney', MemberReceivableMoneyViewSet, basename='receivablemoney')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -48,6 +50,7 @@ urlpatterns = [
 
 if settings.DEBUG:
     import debug_toolbar
+
     urlpatterns = [
         path('__debug__/', include(debug_toolbar.urls)),
     ] + urlpatterns
