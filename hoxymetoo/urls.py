@@ -1,3 +1,13 @@
+"""
+프로그램 ID:SV-1910-PY
+프로그램명:urls.py
+작성자:이상화(developerjosephlee97@gmail.com)
+생성일자:2019-08-16
+버전:0.5
+설명:
+- Django 서버에서 어떤 url이 어떤 view를 담당할 것인가에 대한 파일이다.
+"""
+
 """hoxymetoo URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
@@ -16,18 +26,28 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 from rest_framework import routers
+from hoxymetoo import settings
 from members.views import MemberViewSet
 from welfares.views import WelfareViewSet
-from qnas.views import QnaViewSet
-from chatbot.views import ChatbotViewSet
+from qnas.views import CategoryViewSet, QuestionViewSet, AnswerViewSet, QnaViewSet
+from chatbot.views import ChatBotViewSet
 
 router = routers.DefaultRouter(trailing_slash=False)
 router.register('members', MemberViewSet, basename="members")
 router.register('welfares', WelfareViewSet, basename="welfares")
+router.register('categories', CategoryViewSet, basename="categories")
+router.register('questions', QuestionViewSet, basename="questions")
+router.register('answers', AnswerViewSet, basename="answers")
 router.register('qnas', QnaViewSet, basename="qnas")
-router.register('chatlogs', ChatbotViewSet, basename="chatlogs")
+router.register('chatlogs', ChatBotViewSet, basename="chatlogs")
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include(router.urls)),
 ]
+
+if settings.DEBUG:
+    import debug_toolbar
+    urlpatterns = [
+        path('__debug__/', include(debug_toolbar.urls)),
+    ] + urlpatterns
