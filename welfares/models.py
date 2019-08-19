@@ -362,7 +362,7 @@ class Welfare(models.Model):
         through='WelLifeCycle'
     )
     # 복지와 관련된 책임기관들
-    welResponsibles = models.ManyToManyField(
+    responsibles = models.ManyToManyField(
         Responsible,
         through='WelResponsible'
     )
