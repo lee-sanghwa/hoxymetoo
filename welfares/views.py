@@ -12,7 +12,7 @@
 from welfares.models import Welfare, Disable, HouseType, Desire, TargetCharacter, LifeCycle, Responsible
 from welfares.serializers import WelfareSerializer
 from rest_framework import viewsets, status
-from rest_framework.mixins import CreateModelMixin, UpdateModelMixin
+from rest_framework.mixins import CreateModelMixin, UpdateModelMixin, ListModelMixin
 from rest_framework.response import Response
 
 
@@ -25,7 +25,6 @@ class WelfareViewSet(viewsets.ModelViewSet):
         welfare_data = request.data
 
         disables = welfare_data.get('disables', [])
-        welfares = welfare_data.get('welfares', [])
         house_types = welfare_data.get('houseTypes', [])
         desires = welfare_data.get('desires', [])
         target_characters = welfare_data.get('targetCharacters', [])
@@ -36,8 +35,6 @@ class WelfareViewSet(viewsets.ModelViewSet):
         try:
             for disable in disables:
                 Disable.objects.get(disableId=disable)
-            for welfare in welfares:
-                Welfare.objects.get(welId=welfare)
             for house_type in house_types:
                 HouseType.objects.get(houseTypeId=house_type)
             for desire in desires:
@@ -90,3 +87,31 @@ class WelfareViewSet(viewsets.ModelViewSet):
         kwargs['partial'] = True
 
         return UpdateModelMixin.partial_update(self, request, *args, **kwargs)
+
+    def list(self, request, *args, **kwargs):
+        existing_queryset = self.queryset
+        query_dict = request.GET
+
+        disable = query_dict.get('disable')
+        house_type = query_dict.get('houseType')
+        desire = query_dict.get('desire')
+        target_character = query_dict.get('targetCharacter')
+        life_cycle = query_dict.get('lifeCycle')
+        responsible = query_dict.get('responsible')
+
+        if disable is not None:
+            existing_queryset = existing_queryset.filter(disables__disableId=disable)
+        if house_type is not None:
+            existing_queryset = existing_queryset.filter(houseTypes__houseTypeId=house_type)
+        if desire is not None:
+            existing_queryset = existing_queryset.filter(desires__desireId=desire)
+        if target_character is not None:
+            existing_queryset = existing_queryset.filter(targetCharacters__targetCharacterId=target_character)
+        if life_cycle is not None:
+            existing_queryset = existing_queryset.filter(lifeCycles__lifeCycleId=life_cycle)
+        if responsible is not None:
+            existing_queryset = existing_queryset.filter(responsibles_responsibleId=responsible)
+
+        self.queryset = existing_queryset
+
+        return ListModelMixin.list(self, request, *args, **kwargs)
