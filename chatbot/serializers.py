@@ -12,9 +12,19 @@ from rest_framework import serializers
 from chatbot.models import ChatLog
 
 
-class ChatLogSerializer(serializers.ModelSerializer):
+class ChatLogSenderSerializer(serializers.ModelSerializer):
     class Meta:
         # ChatLog의 모델로부터 serializer를 생성
         model = ChatLog
         # 이 모델의 모든 필드를 이용한다.
         fields = '__all__'
+        extra_kwargs = {'receiverMemKey': {'write_only': True}}
+
+
+class ChatLogReceiverSerializer(serializers.ModelSerializer):
+    class Meta:
+        # ChatLog의 모델로부터 serializer를 생성
+        model = ChatLog
+        # 이 모델의 모든 필드를 이용한다.
+        fields = '__all__'
+        extra_kwargs = {'senderMemKey': {'write_only': True}}
