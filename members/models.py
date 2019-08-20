@@ -32,6 +32,56 @@ class Job(models.Model):
         db_table = 'Job'
 
 
+class SiDo(models.Model):
+    siDoId = models.AutoField(
+        primary_key=True,
+        db_column='sidoid'
+    )
+    siDoName = models.CharField(
+        max_length=15,
+        null=True,
+        db_column='sidoname'
+    )
+
+    class Meta:
+        db_table = 'Sido'
+
+
+class SiGunGu(models.Model):
+    siGunGuId = models.AutoField(
+        primary_key=True,
+        db_column='sigunguid'
+    )
+    siGunGuName = models.CharField(
+        max_length=31,
+        null=True,
+        db_column='sigunguname'
+    )
+
+    class Meta:
+        db_table = 'Sigungu'
+
+
+class Address(models.Model):
+    addressId = models.AutoField(
+        primary_key=True,
+        db_column='addressid'
+    )
+    siDoId = models.ForeignKey(
+        SiDo,
+        on_delete=models.CASCADE,
+        db_column='sidoid'
+    )
+    siGunGuId = models.ForeignKey(
+        SiGunGu,
+        on_delete=models.CASCADE,
+        db_column='sigunguid'
+    )
+
+    class Meta:
+        db_table = 'Address'
+
+
 # 데이터베이스의 가족 테이블과 연동하기 위한 클래스
 class Family(models.Model):
     familyId = models.AutoField(
@@ -49,7 +99,7 @@ class Family(models.Model):
     )
     # https 통신으로 회원 정보에 접근했을 때 가족 구성원에 대한 정보를 주기위한 테이블 (20190807-1)
     familyInfo = models.CharField(
-        max_length=10,
+        max_length=12,
         db_column='familyinfo'
     )
 
@@ -124,11 +174,19 @@ class Member(models.Model):
         null=True,
         db_column='st_bohun'
     )
-    # 회원의 거주지 주소 (대한민국 서울시 선릉역 소프트웨어마에스트로)
-    memAddress = models.CharField(
-        max_length=511,
+    siDoId = models.OneToOneField(
+        SiDo,
         null=True,
-        db_column='st_address'
+        related_name='memSiDo',
+        on_delete=models.CASCADE,
+        db_column='sidoid'
+    )
+    siGunGuId = models.OneToOneField(
+        SiDo,
+        null=True,
+        related_name='memSiGunGu',
+        on_delete=models.CASCADE,
+        db_column='sigunguid'
     )
     # 회원 정보 생성 일자 + 시간 (20190723215934: 2019년 07월 23알 21시 59분 34초)
     createDateTime = models.CharField(
