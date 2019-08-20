@@ -9,16 +9,16 @@
 - HTTP METHOD 의 POST에 대해 채팅 시간을 따로 클라이언트에게 받는 것이 아니라 서버에서 처리해준다.
 """
 
-from chatbot.serializers import ChatLogSerializer
+from chatbot.serializers import ChatLogSenderSerializer, ChatLogReceiverSerializer
 from chatbot.models import ChatLog
 from rest_framework import viewsets
-from rest_framework.mixins import CreateModelMixin
+from rest_framework.mixins import CreateModelMixin, ListModelMixin
 from datetime import datetime
 
 
 class ChatBotViewSet(viewsets.ModelViewSet):
-    queryset = ChatLog.objects.all()
-    serializer_class = ChatLogSerializer
+    queryset = ChatLog.objects.filter(chatLogId=None)
+    serializer_class = ChatLogSenderSerializer
 
     # HTTP METHOD의 POST
     def create(self, request, *args, **kwargs):
@@ -50,3 +50,22 @@ class ChatBotViewSet(viewsets.ModelViewSet):
 
         # 이 데이터를 토대로 채팅 생성
         return CreateModelMixin.create(self, request, *args, **kwargs)
+
+    def list(self, request, *args, **kwargs):
+        chat_data = request.GET
+
+        receiver_member_key = chat_data.get('receiverMemKey', None)
+        sender_member_key = chat_data.get('senderMemKey', None)
+
+        if receiver_member_key is None and sender_member_key is not None:
+            new_queryset = ChatLog.objects.filter(senderMemKey__memKey=sender_member_key)
+            new_serializer_class = ChatLogSenderSerializer
+            self.queryset = new_queryset
+            self.serializer_class = new_serializer_class
+        elif receiver_member_key is not None and sender_member_key is None:
+            new_queryset = ChatLog.objects.filter(receiverMemKey__memKey=receiver_member_key)
+            new_serializer_class = ChatLogReceiverSerializer
+            self.queryset = new_queryset
+            self.serializer_class = new_serializer_class
+
+        return ListModelMixin.list(self, request, *args, **kwargs);
