@@ -104,6 +104,12 @@ class MemberSerializer(serializers.ModelSerializer):
                 'familyInfo': family_member_info
             }
             family_instance = Family.objects.create(**family_data)
+
+            family_instance_id = family_instance.familyId
+            new_family_info = str(family_instance_id) + ':' + family_instance.familyInfo
+            family_instance.familyInfo = new_family_info
+            family_instance.save()
+
             mem_family_data = {
                 'socialId': instance,
                 'familyId': family_instance
@@ -339,10 +345,10 @@ class MemberSerializer(serializers.ModelSerializer):
 
         # 입력받은 가족 구성원 배열에서, 기존에 존재하는 값과 비교하여 추가된 값을 배열에 담는 과정 (입력받은 배열에서 삭제를 통하여)
         for new_family_member in new_families:
-            family_id = new_family_member.get('familyId')
-            new_family_member_birth = new_family_member['familyBirth']
-            new_family_member_gender = new_family_member['familyGender']
-            new_family_member_info = str(new_family_member_birth) + ':' + str(new_family_member_gender)
+            family_id = new_family_member.get('familyId', None)
+            new_family_member_birth = new_family_member.get('familyBirth', None)
+            new_family_member_gender = new_family_member.get('familyGender', None)
+            new_family_member_info = str(new_family_member_birth) + '-' + str(new_family_member_gender)
             # 새로운 가족을 추가하는 경우
             if family_id is None:
                 new_family_data = {
@@ -351,25 +357,25 @@ class MemberSerializer(serializers.ModelSerializer):
                     'familyInfo': new_family_member_info
                 }
                 new_family_instance = Family.objects.create(**new_family_data)
+
+                new_family_instance_id = new_family_instance.familyId
+                new_family_info = str(new_family_instance_id) + ':' + new_family_instance.familyInfo
+                new_family_instance.familyInfo = new_family_info
+                new_family_instance.save()
+
                 new_mem_family_data = {
                     'socialId': instance,
                     'familyId': new_family_instance
                 }
                 MemFamily.objects.create(**new_mem_family_data)
             else:
-                existing_families = Family.objects.get(familyId=family_id)
-                existing_families.familyBirth = new_family_member_birth
-                existing_families.familyGender = new_family_member_gender
-                existing_families.familyInfo = new_family_member_info
-                existing_families.save()
-
-        # 기존에 존재하는 가족 구성원 배열에서, 입력으로 받은 값과 비교하여 삭제된 값을 배열에 담는 과정 (기존에 존재하는 배열에서 삭제를 통하여)
-        for existing_family_member in existing_families:
-            for new_family_member in new_families:
-                # 기존의 가족이 그대로 있는 경우
-                if new_family_member.get('family_id') is not None:
-                    if existing_family_member.familyId == new_family_member:
-                        will_remove_mem_family.remove(existing_family_member)
+                existing_family_member = Family.objects.get(familyId=family_id)
+                existing_family_member.familyBirth = new_family_member_birth
+                existing_family_member.familyGender = new_family_member_gender
+                existing_family_member.familyInfo = str(family_id) + ':' + new_family_member_info
+                existing_family_member.save()
+                # 기존에 존재하는 가족 구성원 배열에서, 입력으로 받은 값과 비교하여 삭제된 값을 배열에 담는 과정 (기존에 존재하는 배열에서 삭제를 통하여)
+                will_remove_mem_family.remove(existing_family_member)
 
         # 삭제되어야할 가족 구성원 아이디들을 반복
         for will_remove_mem_family_member in will_remove_mem_family:
