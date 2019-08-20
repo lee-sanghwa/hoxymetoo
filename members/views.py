@@ -21,7 +21,7 @@ import hashlib
 
 
 class MemberViewSet(viewsets.ModelViewSet):
-    queryset = Member.objects.all()
+    queryset = Member.objects.filter(socialId=None)
     serializer_class = MemberSerializer
     # memKey로 멤버의 정보 조회 및 업데이트 및 삭제
     lookup_field = 'memKey'
