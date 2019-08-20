@@ -20,18 +20,21 @@ class ChatLog(models.Model):
         db_column='chatlogid'
     )
     # 채팅을 보내는 회원의 소셜 로그인의 아이디 ( kakao_32A3DB124 )
-    senderId = models.ForeignKey(
+    senderMemKey = models.ForeignKey(
         Member,
+        to_field='memKey',
         on_delete=models.CASCADE,
-        related_name='senderid',
-        db_column='senderid'
+        related_name='senderMemKey',
+        db_column='sendermemkey'
     )
     # 채팅을 받는 회원의 소셜 로그인의 아이디 ( kakao_32A3DB124 )
-    receiverId = models.ForeignKey(
+    receiverMemKey = models.ForeignKey(
         Member,
+        to_field='memKey',
         on_delete=models.CASCADE,
-        related_name='receiverid',
-        db_column='receiverid'
+        null=True,
+        related_name='receiverMemKey',
+        db_column='receivermemkey'
     )
     # 메세지 내용 (실업급여에 필요한 서류 알려줘)
     chatLogContent = models.TextField(
