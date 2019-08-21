@@ -18,7 +18,6 @@ class MemberReceivableMoney(models.Model):
         Member,
         primary_key=True,
         on_delete=models.CASCADE,
-        related_name='receivableSocialId',
         db_column='socialid'
     )
     money1 = models.IntegerField(
