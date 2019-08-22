@@ -12,6 +12,7 @@
 from welfares.models import Welfare, Disable, HouseType, Desire, TargetCharacter, LifeCycle, Responsible
 from welfares.serializers import WelfareSerializer
 from rest_framework import viewsets, status
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.mixins import CreateModelMixin, UpdateModelMixin, ListModelMixin
 from rest_framework.response import Response
 
@@ -91,6 +92,7 @@ class WelfareViewSet(viewsets.ModelViewSet):
     def list(self, request, *args, **kwargs):
         existing_queryset = self.queryset
         query_dict = request.GET
+        pagination_class = PageNumberPagination
 
         disable = query_dict.get('disable')
         house_type = query_dict.get('houseType')
@@ -98,6 +100,7 @@ class WelfareViewSet(viewsets.ModelViewSet):
         target_character = query_dict.get('targetCharacter')
         life_cycle = query_dict.get('lifeCycle')
         responsible = query_dict.get('responsible')
+        offset = query_dict.get('offset')
 
         if disable is not None:
             existing_queryset = existing_queryset.filter(disables__disableId=disable)
@@ -111,6 +114,9 @@ class WelfareViewSet(viewsets.ModelViewSet):
             existing_queryset = existing_queryset.filter(lifeCycles__lifeCycleId=life_cycle)
         if responsible is not None:
             existing_queryset = existing_queryset.filter(responsibles_responsibleId=responsible)
+
+        if offset is not None:
+            pagination_class.page_size = offset
 
         self.queryset = existing_queryset
 
