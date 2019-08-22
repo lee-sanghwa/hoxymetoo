@@ -99,7 +99,7 @@ class Family(models.Model):
     )
     # https 통신으로 회원 정보에 접근했을 때 가족 구성원에 대한 정보를 주기위한 테이블 (20190807-1)
     familyInfo = models.CharField(
-        max_length=12,
+        max_length=20,
         db_column='familyinfo'
     )
 
@@ -130,7 +130,7 @@ class Member(models.Model):
     )
     # 회원의 email 주소 (test000000001@test.com)
     memEmail = models.CharField(
-        max_length=255,
+        max_length=511,
         null=True,
         db_column='email'
     )
@@ -182,7 +182,7 @@ class Member(models.Model):
         db_column='sidoid'
     )
     siGunGuId = models.OneToOneField(
-        SiDo,
+        SiGunGu,
         null=True,
         related_name='memSiGunGu',
         on_delete=models.CASCADE,
