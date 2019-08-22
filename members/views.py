@@ -10,18 +10,18 @@
 - 서버에서 생성가능한 데이터는 서버에서 처리
 """
 
-from members.models import Member, Job
+from members.models import Member, Job, SiDo, SiGunGu
 from welfares.models import HouseType, Desire, TargetCharacter, LifeCycle, Disable, Welfare
 from members.serializers import MemberSerializer
 from rest_framework import viewsets, status
-from rest_framework.mixins import CreateModelMixin, UpdateModelMixin
+from rest_framework.mixins import CreateModelMixin, UpdateModelMixin, ListModelMixin
 from rest_framework.response import Response
 from datetime import datetime
 import hashlib
 
 
 class MemberViewSet(viewsets.ModelViewSet):
-    queryset = Member.objects.filter(socialId=None)
+    queryset = Member.objects.all()
     serializer_class = MemberSerializer
     # memKey로 멤버의 정보 조회 및 업데이트 및 삭제
     lookup_field = 'memKey'
@@ -150,3 +150,46 @@ class MemberViewSet(viewsets.ModelViewSet):
 
         # 이 데이터를 토대로 멤버 수정
         return UpdateModelMixin.update(self, request, *args, **kwargs)
+
+    def list(self, request, *args, **kwargs):
+        new_queryset = Member.objects.filter(socialId=None)
+        social_id = request.GET.get('socialId', None)
+
+        if social_id is not None:
+            try:
+                instance = Member.objects.get(socialId=social_id)
+            except Member.DoesNotExist:
+                message = {
+                    'message': '해당하는 socialId가 존재하지 않습니다.'
+                }
+                return Response(message, status=status.HTTP_404_NOT_FOUND)
+            serializer = self.get_serializer(instance)
+            serializer_data = serializer.data
+            member_data = self.changeAddressToString(serializer_data)
+            return Response(member_data)
+
+        self.queryset = new_queryset
+
+        return ListModelMixin.list(self, request, *args, **kwargs)
+
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance)
+        serializer_data = serializer.data
+        
+        member_data = self.changeAddressToString(serializer_data)
+
+        return Response(member_data)
+
+    def changeAddressToString(self, serializer_data):
+        si_do_id = serializer_data['siDoId']
+        si_gun_gu_id = serializer_data['siGunGuId']
+
+        if si_do_id is not None:
+            si_do_name = SiDo.objects.get(siDoId=si_do_id).siDoName
+            serializer_data['siDoId'] = si_do_name
+
+        if si_gun_gu_id is not None:
+            si_gun_gu_name = SiGunGu.objects.get(siGunGuId=si_gun_gu_id).siGunGuName
+            serializer_data['siGunGuId'] = si_gun_gu_name
+        return serializer_data
