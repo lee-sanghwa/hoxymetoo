@@ -30,92 +30,7 @@ class MemberSerializer(serializers.ModelSerializer):
         life_cycles = unvalidated_data.get('lifeCycles', [])
         families = unvalidated_data.get('families', [])
 
-        social_id = validated_data.get('socialId')
-        push_token = validated_data.get('pushToken')
-        mem_key = validated_data.get('memKey')
-        mem_email = validated_data.get('memEmail')
-        mem_password = validated_data.get('memPassword')
-        mem_receivable_money = validated_data.get('memReceivableMoney')
-        mem_birthday = validated_data.get('memBirthday')
-        mem_gender = validated_data.get('memGender')
-        mem_family = validated_data.get('memFamily')
-        mem_income = validated_data.get('memIncome')
-        mem_bohun = validated_data.get('memBohun')
-        si_do_id = validated_data.get('siDoId')
-        si_gun_gu_id = validated_data.get('siGunGuId')
-        create_date_time = validated_data.get('createDateTime')
-        create_date = validated_data.get('createDate')
-        create_time = validated_data.get('createTime')
-        update_date_time = validated_data.get('updateDateTime')
-        update_date = validated_data.get('updateDate')
-        update_time = validated_data.get('updateTime')
-
-        if mem_email is not None:
-            aes_encrypt_query_email = "HEX(AES_ENCRYPT('{memEmail}', '{aesKey}'))".format(memEmail=mem_email,
-                                                                                          aesKey=aes_key)
-            mem_email = aes_encrypt_query_email
-        if mem_birthday is not None:
-            aes_encrypt_query_birthday = "HEX(AES_ENCRYPT('{memBirthday}', '{aesKey}'))".format(
-                memBirthday=mem_birthday, aesKey=aes_key)
-            mem_birthday = aes_encrypt_query_birthday
-        if mem_gender is not None:
-            aes_encrypt_query_gender = "HEX(AES_ENCRYPT('{memGender}', '{aesKey}'))".format(memGender=mem_gender,
-                                                                                            aesKey=aes_key)
-            mem_gender = aes_encrypt_query_gender
-        if mem_family is not None:
-            aes_encrypt_query_family = "HEX(AES_ENCRYPT('{memFamily}', '{aesKey}'))".format(memFamily=mem_family,
-                                                                                            aesKey=aes_key)
-            mem_family = aes_encrypt_query_family
-        if mem_income is not None:
-            aes_encrypt_query_income = "HEX(AES_ENCRYPT('{memIncome}', '{aesKey}'))".format(memIncome=mem_income,
-                                                                                            aesKey=aes_key)
-            mem_income = aes_encrypt_query_income
-        if mem_bohun is not None:
-            aes_encrypt_query_bohun = "HEX(AES_ENCRYPT('{memBohun}', '{aesKey}'))".format(memBohun=mem_bohun,
-                                                                                          aesKey=aes_key)
-            mem_bohun = aes_encrypt_query_bohun
-
-        if push_token is None:
-            push_token = 'NULL'
-        if mem_email is None:
-            mem_email = 'NULL'
-        if mem_password is None:
-            mem_password = 'NULL'
-        if mem_receivable_money is None:
-            mem_receivable_money = 0
-        if mem_birthday is None:
-            mem_birthday = 'NULL'
-        if mem_gender is None:
-            mem_gender = 'NULL'
-        if mem_family is None:
-            mem_family = 'NULL'
-        if mem_income is None:
-            mem_income = 'NULL'
-        if mem_bohun is None:
-            mem_bohun = 'NULL'
-        if si_do_id is None:
-            si_do_id = 'NULL'
-        if si_gun_gu_id is None:
-            si_gun_gu_id = 'NULL'
-
-        create_query_with_aes_encrypt_string = '''INSERT INTO Member(socialid, pushtoken, memkey, email, password,
-                                                                receivablemoney, st_birthday, st_gender, st_family,
-                                                                st_income, st_bohun, sidoid, sigunguid, createdatetime,
-                                                                createdate, createtime, updatedatetime, updatedate, updatetime)
-                                        VALUES ('{socialId}', '{pushToken}', '{memKey}', {memEmail}, {memPassword},
-                                                {memReceivableMoney}, {memBirthday}, {memGender}, {memFamily},
-                                                {memIncome}, {memBohun}, {siDoId}, {siGunGuId}, '{createDateTime}',
-                                                '{createDate}', '{createTime}', '{updateDateTime}', '{updateDate}', '{updateTime}')'''
-
-        cursor.execute(create_query_with_aes_encrypt_string.format(
-            socialId=social_id, pushToken=push_token, memKey=mem_key, memEmail=mem_email, memPassword=mem_password,
-            memReceivableMoney=mem_receivable_money, memBirthday=mem_birthday, memGender=mem_gender,
-            memFamily=mem_family, memIncome=mem_income, memBohun=mem_bohun, siDoId=si_do_id, siGunGuId=si_gun_gu_id,
-            createDateTime=create_date_time, createDate=create_date, createTime=create_time,
-            updateDateTime=update_date_time, updateDate=update_date, updateTime=update_time
-        ))
-
-        instance = Member.objects.get(socialId=social_id)
+        instance = self.decryptMemberData(cursor=cursor, validated_data=validated_data, command='CREATE')
 
         # 회원의 직업에 대한 처리
         for job in jobs:
@@ -207,7 +122,10 @@ class MemberSerializer(serializers.ModelSerializer):
 
     # 이 serializer로 update가 호출 되었을 때, 즉 view에서 HTTP Method인 PATCH가 request 되었을 때
     def update(self, instance, validated_data):
+        cursor = connection.cursor()
         unvalidated_data = self.context['request'].data
+
+        instance = self.decryptMemberData(cursor=cursor, validated_data=validated_data, command='UPDATE')
 
         # 입력받은 json들에 대해서는 생성되어야할 것들로 네이밍
         # 기존에 존재하는 데이터데 대해서는 삭제되어야할 것들로 네이밍
@@ -462,6 +380,8 @@ class MemberSerializer(serializers.ModelSerializer):
                 existing_family_member.familyInfo = str(family_id) + ':' + new_family_member_info
                 existing_family_member.save()
                 # 기존에 존재하는 가족 구성원 배열에서, 입력으로 받은 값과 비교하여 삭제된 값을 배열에 담는 과정 (기존에 존재하는 배열에서 삭제를 통하여)
+                print(will_remove_mem_family)
+                print(existing_family_member)
                 will_remove_mem_family.remove(existing_family_member)
 
         # 삭제되어야할 가족 구성원 아이디들을 반복
@@ -523,3 +443,110 @@ class MemberSerializer(serializers.ModelSerializer):
     class Meta:
         model = Member
         fields = '__all__'
+
+    def decryptMemberData(self, cursor, validated_data, command):
+        social_id = validated_data.get('socialId')
+        push_token = validated_data.get('pushToken')
+        mem_key = validated_data.get('memKey')
+        mem_email = validated_data.get('memEmail')
+        mem_password = validated_data.get('memPassword')
+        mem_receivable_money = validated_data.get('memReceivableMoney')
+        mem_birthday = validated_data.get('memBirthday')
+        mem_gender = validated_data.get('memGender')
+        mem_family = validated_data.get('memFamily')
+        mem_income = validated_data.get('memIncome')
+        mem_bohun = validated_data.get('memBohun')
+        si_do_id = validated_data.get('siDoId')
+        si_gun_gu_id = validated_data.get('siGunGuId')
+        create_date_time = validated_data.get('createDateTime')
+        create_date = validated_data.get('createDate')
+        create_time = validated_data.get('createTime')
+        update_date_time = validated_data.get('updateDateTime')
+        update_date = validated_data.get('updateDate')
+        update_time = validated_data.get('updateTime')
+
+        if mem_email is not None:
+            aes_encrypt_query_email = "HEX(AES_ENCRYPT('{memEmail}', '{aesKey}'))".format(memEmail=mem_email,
+                                                                                          aesKey=aes_key)
+            mem_email = aes_encrypt_query_email
+        if mem_birthday is not None:
+            aes_encrypt_query_birthday = "HEX(AES_ENCRYPT('{memBirthday}', '{aesKey}'))".format(
+                memBirthday=mem_birthday, aesKey=aes_key)
+            mem_birthday = aes_encrypt_query_birthday
+        if mem_gender is not None:
+            aes_encrypt_query_gender = "HEX(AES_ENCRYPT('{memGender}', '{aesKey}'))".format(memGender=mem_gender,
+                                                                                            aesKey=aes_key)
+            mem_gender = aes_encrypt_query_gender
+        if mem_family is not None:
+            aes_encrypt_query_family = "HEX(AES_ENCRYPT('{memFamily}', '{aesKey}'))".format(memFamily=mem_family,
+                                                                                            aesKey=aes_key)
+            mem_family = aes_encrypt_query_family
+        if mem_income is not None:
+            aes_encrypt_query_income = "HEX(AES_ENCRYPT('{memIncome}', '{aesKey}'))".format(memIncome=mem_income,
+                                                                                            aesKey=aes_key)
+            mem_income = aes_encrypt_query_income
+        if mem_bohun is not None:
+            aes_encrypt_query_bohun = "HEX(AES_ENCRYPT('{memBohun}', '{aesKey}'))".format(memBohun=mem_bohun,
+                                                                                          aesKey=aes_key)
+            mem_bohun = aes_encrypt_query_bohun
+
+        if push_token is None:
+            push_token = 'NULL'
+        if mem_email is None:
+            mem_email = 'NULL'
+        if mem_password is None:
+            mem_password = 'NULL'
+        if mem_receivable_money is None:
+            mem_receivable_money = 0
+        if mem_birthday is None:
+            mem_birthday = 'NULL'
+        if mem_gender is None:
+            mem_gender = 'NULL'
+        if mem_family is None:
+            mem_family = 'NULL'
+        if mem_income is None:
+            mem_income = 'NULL'
+        if mem_bohun is None:
+            mem_bohun = 'NULL'
+        if si_do_id is None:
+            si_do_id = 'NULL'
+        if si_gun_gu_id is None:
+            si_gun_gu_id = 'NULL'
+
+        string_of_create_query_with_aes_encrypt = '''
+            INSERT INTO Member(socialid, pushtoken, memkey, email, password, receivablemoney, st_birthday, st_gender,
+            st_family, st_income, st_bohun, sidoid, sigunguid, createdatetime, createdate, createtime, updatedatetime,
+            updatedate, updatetime)
+            VALUES ('{socialId}', '{pushToken}', '{memKey}', {memEmail}, {memPassword}, {memReceivableMoney},
+            {memBirthday}, {memGender}, {memFamily}, {memIncome}, {memBohun}, {siDoId}, {siGunGuId},
+            '{createDateTime}', '{createDate}', '{createTime}', '{updateDateTime}', '{updateDate}', '{updateTime}')
+        '''
+
+        string_of_update_query_with_aes_encrypt = '''
+        UPDATE Member
+        SET socialid = '{socialId}', pushtoken = '{pushToken}', memkey = '{memKey}', email= {memEmail},
+        password = {memPassword}, receivablemoney = {memReceivableMoney}, st_birthday = {memBirthday},
+        st_gender = {memGender}, st_family = {memFamily}, st_income = {memIncome}, st_bohun = {memBohun},
+        sidoid = {siDoId}, sigunguid = {siGunGuId}, updatedatetime = '{updateDateTime}', updatedate = '{updateDate}',
+        updatetime = '{updateTime}'
+        WHERE socialid = '{socialId}'
+        '''
+        if command == 'CREATE':
+            cursor.execute(string_of_create_query_with_aes_encrypt.format(
+                socialId=social_id, pushToken=push_token, memKey=mem_key, memEmail=mem_email, memPassword=mem_password,
+                memReceivableMoney=mem_receivable_money, memBirthday=mem_birthday, memGender=mem_gender,
+                memFamily=mem_family, memIncome=mem_income, memBohun=mem_bohun, siDoId=si_do_id, siGunGuId=si_gun_gu_id,
+                createDateTime=create_date_time, createDate=create_date, createTime=create_time,
+                updateDateTime=update_date_time, updateDate=update_date, updateTime=update_time
+            ))
+        elif command == 'UPDATE':
+            cursor.execute(string_of_update_query_with_aes_encrypt.format(
+                socialId=social_id, pushToken=push_token, memKey=mem_key, memEmail=mem_email, memPassword=mem_password,
+                memReceivableMoney=mem_receivable_money, memBirthday=mem_birthday, memGender=mem_gender,
+                memFamily=mem_family, memIncome=mem_income, memBohun=mem_bohun, siDoId=si_do_id, siGunGuId=si_gun_gu_id,
+                updateDateTime=update_date_time, updateDate=update_date, updateTime=update_time
+            ))
+
+        instance = Member.objects.get(socialId=social_id)
+
+        return instance
