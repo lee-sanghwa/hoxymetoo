@@ -100,15 +100,16 @@ class MemberViewSet(viewsets.ModelViewSet):
         request.POST._mutable = True
 
         member_data = request.data
+        social_id = member_data['socialId']
         now_datetime = datetime.now()
 
-        jobs = member_data.get('jobs')
-        disables = member_data.get('disables')
-        welfares = member_data.get('welfares')
-        house_types = member_data.get('houseTypes')
-        desires = member_data.get('desires')
-        target_characters = member_data.get('targetCharacters')
-        life_cycles = member_data.get('lifeCycles')
+        jobs = member_data.get('jobs', [])
+        disables = member_data.get('disables', [])
+        welfares = member_data.get('welfares', [])
+        house_types = member_data.get('houseTypes', [])
+        desires = member_data.get('desires', [])
+        target_characters = member_data.get('targetCharacters', [])
+        life_cycles = member_data.get('lifeCycles', [])
 
         # 유효성 검사를 거치지않는 필드들에 대해서 따로 검사
         try:
@@ -141,7 +142,9 @@ class MemberViewSet(viewsets.ModelViewSet):
         )
         update_date = update_date_time[:8]
         update_time = update_date_time[8:]
+        mem_key = hashlib.sha256(social_id.encode()).hexdigest()
 
+        member_data['memKey'] = mem_key
         member_data['updateDateTime'] = update_date_time
         member_data['updateDate'] = update_date
         member_data['updateTime'] = update_time
