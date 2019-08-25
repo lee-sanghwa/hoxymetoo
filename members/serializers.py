@@ -389,7 +389,7 @@ class MemberSerializer(serializers.ModelSerializer):
             # 멤버의 소셜 아이디와 삭제되어야할 가족 구성원 아이디로 검색 후 삭제
             Family.objects.get(familyId=will_remove_mem_family_member.familyId).delete()
 
-        return serializers.ModelSerializer.update(self, instance=instance, validated_data=validated_data)
+        return instance
 
     # 직업에 대한 아이디값을 반환하는 것이 아닌 직업의 이름을 반환하기 위함
     jobs = serializers.SlugRelatedField(
