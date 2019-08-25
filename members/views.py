@@ -36,6 +36,7 @@ class MemberViewSet(viewsets.ModelViewSet):
 
         member_data = request.data
         social_id = member_data['socialId']
+        salting_with_social_id = 'hoxymetoo_' + social_id
         now_datetime = datetime.now()
 
         jobs = member_data.get('jobs', [])
@@ -77,7 +78,7 @@ class MemberViewSet(viewsets.ModelViewSet):
         )
         create_date = create_date_time[:8]
         create_time = create_date_time[8:]
-        mem_key = hashlib.sha256(social_id.encode()).hexdigest()
+        mem_key = hashlib.sha256(salting_with_social_id.encode()).hexdigest()
 
         member_data['memKey'] = mem_key
         member_data['createDateTime'] = create_date_time
@@ -101,6 +102,7 @@ class MemberViewSet(viewsets.ModelViewSet):
 
         member_data = request.data
         social_id = member_data['socialId']
+        salting_with_social_id = 'hoxymetoo_' + social_id
         now_datetime = datetime.now()
 
         jobs = member_data.get('jobs', [])
@@ -142,7 +144,7 @@ class MemberViewSet(viewsets.ModelViewSet):
         )
         update_date = update_date_time[:8]
         update_time = update_date_time[8:]
-        mem_key = hashlib.sha256(social_id.encode()).hexdigest()
+        mem_key = hashlib.sha256(salting_with_social_id.encode()).hexdigest()
 
         member_data['memKey'] = mem_key
         member_data['updateDateTime'] = update_date_time
