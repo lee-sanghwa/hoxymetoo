@@ -13,6 +13,8 @@
 from members.models import Member, Job, SiDo, SiGunGu
 from welfares.models import HouseType, Desire, TargetCharacter, LifeCycle, Disable, Welfare
 from members.serializers import MemberSerializer
+from hoxymetoo.key import aes_key
+from django.db import connection
 from rest_framework import viewsets, status
 from rest_framework.mixins import CreateModelMixin, UpdateModelMixin, ListModelMixin
 from rest_framework.response import Response
@@ -166,7 +168,8 @@ class MemberViewSet(viewsets.ModelViewSet):
             serializer = self.get_serializer(instance)
             serializer_data = serializer.data
             member_data = self.changeAddressToString(serializer_data)
-            return Response(member_data)
+            decrypt_member_data = self.decryptMemberData(social_id=social_id, member_data=member_data)
+            return Response(decrypt_member_data)
 
         self.queryset = new_queryset
 
@@ -176,10 +179,11 @@ class MemberViewSet(viewsets.ModelViewSet):
         instance = self.get_object()
         serializer = self.get_serializer(instance)
         serializer_data = serializer.data
-        
-        member_data = self.changeAddressToString(serializer_data)
 
-        return Response(member_data)
+        member_data = self.changeAddressToString(serializer_data)
+        decrypt_member_data = self.decryptMemberData(social_id=instance.socialId, member_data=member_data)
+
+        return Response(decrypt_member_data)
 
     def changeAddressToString(self, serializer_data):
         si_do_id = serializer_data['siDoId']
@@ -193,3 +197,22 @@ class MemberViewSet(viewsets.ModelViewSet):
             si_gun_gu_name = SiGunGu.objects.get(siGunGuId=si_gun_gu_id).siGunGuName
             serializer_data['siGunGuId'] = si_gun_gu_name
         return serializer_data
+
+    def decryptMemberData(self, social_id, member_data):
+        cursor = connection.cursor()
+        column_names = {'memEmail': 'email', 'memBirthday': 'st_birthday', 'memGender': 'st_gender',
+                        'memFamily': 'st_family', 'memIncome': 'st_income', 'memBohun': 'st_bohun'}
+        decrypt_mem_column_query_string = '''
+            SELECT CAST( AES_DECRYPT(UNHEX({column}), '{aesKey}') AS CHAR) AS {column}
+            FROM Member
+            WHERE socialid='{socialId}'
+        '''
+
+        for column_name_item in column_names.items():
+            cursor.execute(
+                decrypt_mem_column_query_string.format(column=column_name_item[1], aesKey=aes_key, socialId=social_id))
+            tuple_query_return = cursor.fetchone()
+            decrypt_column_data = tuple_query_return[0]
+            member_data[column_name_item[0]] = decrypt_column_data
+
+        return member_data
