@@ -9,6 +9,7 @@
 """
 
 from django.db import models
+from addresses.models import Address
 
 
 # 장애 등급
@@ -20,7 +21,7 @@ class DisableLevel(models.Model):
     )
     # 1급, 2급, 3급, 4급, 5급, 6급
     disableLevelName = models.CharField(
-        max_length=7,
+        max_length=127,
         unique=True,
         db_column='disablelevelname'
     )
@@ -40,7 +41,7 @@ class DisableType(models.Model):
     )
     # 지체, 시각, 청각, 언어, 지적, 뇌병변, 자폐성, 정신, 신장, 심장, 호흡기, 간, 안면, 장루, 간질
     disableTypeName = models.CharField(
-        max_length=15,
+        max_length=127,
         unique=True,
         db_column='disabletypename'
     )
@@ -68,7 +69,7 @@ class Disable(models.Model):
     )
     # 지체 1급
     disableName = models.CharField(
-        max_length=31,
+        max_length=255,
         unique=True,
         db_column='disablename'
     )
@@ -89,7 +90,7 @@ class HouseType(models.Model):
     # 해당없음, 한부모, 다문화, 조손, 새터민,소년소녀가장, 독거노인
     houseTypeName = models.CharField(
         unique=True,
-        max_length=15,
+        max_length=127,
         db_column='housetypename'
     )
 
@@ -109,7 +110,7 @@ class Desire(models.Model):
     # 안전, 건강, 일상생활유지 , 가족관계, 사회적 관계, 경제, 교육, 고용, 생활환경, 법률 및 권익보장, 기타
     desireName = models.CharField(
         unique=True,
-        max_length=31,
+        max_length=127,
         db_column='desirename'
     )
 
@@ -129,7 +130,7 @@ class LifeCycle(models.Model):
     # 영유아, 아동, 청소년, 청년, 중장년, 노년
     lifeCycleName = models.CharField(
         unique=True,
-        max_length=7,
+        max_length=127,
         db_column='lifecyclename'
     )
 
@@ -149,30 +150,12 @@ class TargetCharacter(models.Model):
     # 해당없음, 여성, 임산부, 장애, 국가유공자등 보훈대상자, 실업자
     targetCharacterName = models.CharField(
         unique=True,
-        max_length=31,
+        max_length=127,
         db_column='targetcharactername'
     )
 
     class Meta:
         db_table = 'Targetcharacter'
-
-
-# 소관 부처
-class Ministry(models.Model):
-    # 1, 2, 3, ......
-    ministryId = models.AutoField(
-        primary_key=True,
-        db_column='ministryid'
-    )
-    # 보건복지부
-    ministryName = models.CharField(
-        unique=True,
-        max_length=31,
-        db_column='ministryname'
-    )
-
-    class Meta:
-        db_table = 'Ministry'
 
 
 # 소관 조직
@@ -185,12 +168,30 @@ class Organization(models.Model):
     # 기초생활보장과
     organizationName = models.CharField(
         unique=True,
-        max_length=31,
+        max_length=127,
         db_column='organizationname'
     )
 
     class Meta:
         db_table = 'Organization'
+
+
+# 소관 부처
+class Ministry(models.Model):
+    # 1, 2, 3, ......
+    ministryId = models.AutoField(
+        primary_key=True,
+        db_column='ministryid'
+    )
+    # 보건복지부
+    ministryName = models.CharField(
+        unique=True,
+        max_length=127,
+        db_column='ministryname'
+    )
+
+    class Meta:
+        db_table = 'Ministry'
 
 
 # 책임 기관에 대한 테이블
@@ -215,12 +216,23 @@ class Responsible(models.Model):
     # 책임 기관 이름 ( 기초생활보장과-보건복지부 )
     responsibleName = models.CharField(
         unique=True,
-        max_length=63,
+        max_length=255,
         db_column='responsiblename'
     )
 
     class Meta:
         db_table = 'Responsible'
+
+
+class Index(models.Model):
+    indexName = models.CharField(
+        primary_key=True,
+        max_length=255,
+        db_column='indexname'
+    )
+
+    class Meta:
+        db_table = 'Index'
 
 
 class Welfare(models.Model):
@@ -238,7 +250,7 @@ class Welfare(models.Model):
     )
     # 복지 요약 ( 생활이 어려운 수급자에게 일상생활에 필요한 급여를 지급하여 최저생활을 보장하고 자활을 조성하는 것을 목적으로 함 )
     welSummary = models.CharField(
-        max_length=255,
+        max_length=511,
         null=True,
         blank=True,
         db_column='welsummary'
@@ -267,64 +279,55 @@ class Welfare(models.Model):
         db_column='howtoapply'
     )
     # 복지 신청 방법 이미지링크 ( http://www.bokjiro.go.kr/upload_data/AC/service01/WELSVC_201406272206180.gif )
-    howToApplyImageLink = models.CharField(
-        max_length=511,
+    howToApplyImageLink = models.TextField(
         null=True,
         blank=True,
         db_column='howtoapplyimagelink'
     )
     # 문의처 이름 ( 보건복지상담센터 )
-    contactInfoName = models.CharField(
-        max_length=127,
+    contactInfoName = models.TextField(
         null=True,
         blank=True,
         db_column='contactinfoname'
     )
     # 문의처 연락처 ( 129 )
-    contactInfoNumber = models.CharField(
-        max_length=31,
+    contactInfoNumber = models.TextField(
         null=True,
         blank=True,
         db_column='contactinfonumber'
     )
     # 관련 사이트 이름 ( 보건복지상담센터 )
-    siteName = models.CharField(
-        max_length=63,
+    siteName = models.TextField(
         null=True,
         blank=True,
         db_column='sitename'
     )
     # 관련 사이트 링크주소 ( http://www.129.go.kr )
-    siteLink = models.CharField(
-        max_length=255,
+    siteLink = models.TextField(
         null=True,
         blank=True,
         db_column='sitelink'
     )
     # 복지 혜택에 필요한 서식/자료 이름 ( 2019년_국민기초생활보장사업안내(최종인쇄).pdf )
-    formName = models.CharField(
-        max_length=63,
+    formName = models.TextField(
         null=True,
         blank=True,
         db_column='formname'
     )
     # 복지 혜택에 필요한 서식/자료 링크주소 ( http://www.bokjiro.go.kr/upload_data/AC/service01/WELSVC_201901211704030.pdf )
-    formLink = models.CharField(
-        max_length=255,
+    formLink = models.TextField(
         null=True,
         blank=True,
         db_column='formlink'
     )
     # 근거 법령 이름 ( 국민기초생활 보장법 )
-    lawName = models.CharField(
-        max_length=63,
+    lawName = models.TextField(
         null=True,
         blank=True,
         db_column='lawname'
     )
     # 근거 법령 링크주소 ( http://www.law.go.kr/DRF/lawService.do?OC=webmaster&target=law&type=HTML&ID=1973 )
-    lawLink = models.CharField(
-        max_length=255,
+    lawLink = models.TextField(
         null=True,
         blank=True,
         db_column='lawlink'
@@ -336,30 +339,35 @@ class Welfare(models.Model):
         blank=True,
         db_column='registerdate'
     )
-    # 복지와 관련된 가구유형들
-    houseTypes = models.ManyToManyField(
-        HouseType,
-        through='WelHouseType'
+    welAddressId = models.OneToOneField(
+        Address,
+        on_delete=models.CASCADE,
+        db_column='weladdressid'
     )
     # 복지에 해당하는 질병들
     disables = models.ManyToManyField(
         Disable,
         through='WelDisable'
     )
+    # 복지와 관련된 가구유형들
+    houseTypes = models.ManyToManyField(
+        HouseType,
+        through='WelHouseType'
+    )
     # 복지와 관련된 욕구들
     desires = models.ManyToManyField(
         Desire,
         through='WelDesire'
     )
-    # 복지와 관련된 대상특성들
-    targetCharacters = models.ManyToManyField(
-        TargetCharacter,
-        through='WelTargetCharacter'
-    )
     # 복지와 관련된 생애주기들
     lifeCycles = models.ManyToManyField(
         LifeCycle,
         through='WelLifeCycle'
+    )
+    # 복지와 관련된 대상특성들
+    targetCharacters = models.ManyToManyField(
+        TargetCharacter,
+        through='WelTargetCharacter'
     )
     # 복지와 관련된 책임기관들
     responsibles = models.ManyToManyField(
@@ -495,3 +503,23 @@ class WelResponsible(models.Model):
 
     class Meta:
         db_table = 'Welresponsible'
+
+
+class WelIndex(models.Model):
+    welIndexId = models.AutoField(
+        primary_key=True,
+        db_column='welindexid'
+    )
+    welId = models.ForeignKey(
+        Welfare,
+        on_delete=models.CASCADE,
+        db_column='welid'
+    )
+    indexName = models.ForeignKey(
+        Index,
+        on_delete=models.CASCADE,
+        db_column='indexname'
+    )
+
+    class Meta:
+        db_table = 'Welindex'
