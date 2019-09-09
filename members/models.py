@@ -10,76 +10,7 @@
 
 from django.db import models
 from welfares.models import Disable, Welfare, LifeCycle, TargetCharacter, Desire, HouseType
-
-
-# 데이터베이스의 직업 테이블과 연동하기 위한 클래스
-class Job(models.Model):
-    jobId = models.AutoField(
-        primary_key=True,
-        # jobId의 이름을 jobid로 설정 (원래는 jobId)
-        db_column='jobid'
-    )
-    # 직업 이름
-    jobName = models.CharField(
-        max_length=127,
-        unique=True,
-        # jobName의 이름을 jobname로 설정 (원래는 jobName)
-        db_column='jobname'
-    )
-
-    class Meta:
-        # 직업 테이블의 이름을 Job으로 설정 (원래는 members_Job)
-        db_table = 'Job'
-
-
-class SiDo(models.Model):
-    siDoId = models.AutoField(
-        primary_key=True,
-        db_column='sidoid'
-    )
-    siDoName = models.CharField(
-        max_length=15,
-        null=True,
-        db_column='sidoname'
-    )
-
-    class Meta:
-        db_table = 'Sido'
-
-
-class SiGunGu(models.Model):
-    siGunGuId = models.AutoField(
-        primary_key=True,
-        db_column='sigunguid'
-    )
-    siGunGuName = models.CharField(
-        max_length=31,
-        null=True,
-        db_column='sigunguname'
-    )
-
-    class Meta:
-        db_table = 'Sigungu'
-
-
-class Address(models.Model):
-    addressId = models.AutoField(
-        primary_key=True,
-        db_column='addressid'
-    )
-    siDoId = models.ForeignKey(
-        SiDo,
-        on_delete=models.CASCADE,
-        db_column='sidoid'
-    )
-    siGunGuId = models.ForeignKey(
-        SiGunGu,
-        on_delete=models.CASCADE,
-        db_column='sigunguid'
-    )
-
-    class Meta:
-        db_table = 'Address'
+from addresses.models import Address
 
 
 # 데이터베이스의 가족 테이블과 연동하기 위한 클래스
@@ -102,10 +33,36 @@ class Family(models.Model):
         max_length=20,
         db_column='familyinfo'
     )
+    familyAddressId = models.OneToOneField(
+        Address,
+        null=True,
+        on_delete=models.CASCADE,
+        db_column='familyaddressid'
+    )
 
     class Meta:
         # 가족 테이블의 이름을 Family로 설정 (원래는 members_Family)
         db_table = 'Family'
+
+
+# 데이터베이스의 직업 테이블과 연동하기 위한 클래스
+class Job(models.Model):
+    jobId = models.AutoField(
+        primary_key=True,
+        # jobId의 이름을 jobid로 설정 (원래는 jobId)
+        db_column='jobid'
+    )
+    # 직업 이름
+    jobName = models.CharField(
+        max_length=127,
+        unique=True,
+        # jobName의 이름을 jobname로 설정 (원래는 jobName)
+        db_column='jobname'
+    )
+
+    class Meta:
+        # 직업 테이블의 이름을 Job으로 설정 (원래는 members_Job)
+        db_table = 'Job'
 
 
 # 데이터베이스의 회원 테이블과 연동하기 위한 클래스
@@ -144,6 +101,10 @@ class Member(models.Model):
         default=0,
         db_column='receivablemoney'
     )
+    memReceivableMoneyDescribe = models.TextField(
+        null=True,
+        db_column='receivablemoneydescribe'
+    )
     # 회원의 생일 (20190807)
     memBirthday = models.CharField(
         max_length=63,
@@ -174,19 +135,11 @@ class Member(models.Model):
         null=True,
         db_column='st_bohun'
     )
-    siDoId = models.OneToOneField(
-        SiDo,
+    memAddressId = models.OneToOneField(
+        Address,
         null=True,
-        related_name='memSiDo',
         on_delete=models.CASCADE,
-        db_column='sidoid'
-    )
-    siGunGuId = models.OneToOneField(
-        SiGunGu,
-        null=True,
-        related_name='memSiGunGu',
-        on_delete=models.CASCADE,
-        db_column='sigunguid'
+        db_column='memaddressid'
     )
     # 회원 정보 생성 일자 + 시간 (20190723215934: 2019년 07월 23알 21시 59분 34초)
     createDateTime = models.CharField(
@@ -218,30 +171,20 @@ class Member(models.Model):
         max_length=6,
         db_column='updatetime'
     )
+    # 회원의 가족구성원들
+    families = models.ManyToManyField(
+        Family,
+        through='MemFamily'
+    )
     # 회원이 갖고 있는 직업들
     jobs = models.ManyToManyField(
         Job,
         through='MemJob'
     )
-    # 회원이 갖고 있는 질병들
-    disables = models.ManyToManyField(
-        Disable,
-        through='MemDisable'
-    )
     # 회원이 받을 수 있는 복지들
     welfares = models.ManyToManyField(
         Welfare,
         through='MemWelfare'
-    )
-    # 회원의 가구유형들
-    houseTypes = models.ManyToManyField(
-        HouseType,
-        through='MemHouseType'
-    )
-    # 회원이 관심있어하는 분야들
-    desires = models.ManyToManyField(
-        Desire,
-        through='MemDesire'
     )
     # 회원의 대상특성들
     targetCharacters = models.ManyToManyField(
@@ -253,15 +196,47 @@ class Member(models.Model):
         LifeCycle,
         through='MemLifeCycle'
     )
-    # 회원의 가족구성원들
-    families = models.ManyToManyField(
-        Family,
-        through='MemFamily'
+
+    # 회원이 관심있어하는 분야들
+    desires = models.ManyToManyField(
+        Desire,
+        through='MemDesire'
+    )
+    # 회원의 가구유형들
+    houseTypes = models.ManyToManyField(
+        HouseType,
+        through='MemHouseType'
+    )
+    # 회원이 갖고 있는 질병들
+    disables = models.ManyToManyField(
+        Disable,
+        through='MemDisable'
     )
 
     class Meta:
         # 회원 테이블의 이름을 Member로 설정 (원래는 members_Member)
         db_table = 'Member'
+
+
+# 데이터베이스의 회원과 가족 구성원 테이블을 연결한 테이블과 연동하기 위한 클래스
+class MemFamily(models.Model):
+    memFamilyId = models.AutoField(
+        primary_key=True,
+        db_column='memfamilyid'
+    )
+    socialId = models.ForeignKey(
+        Member,
+        on_delete=models.CASCADE,
+        db_column='socialid'
+    )
+    familyId = models.ForeignKey(
+        Family,
+        on_delete=models.CASCADE,
+        db_column='familyid'
+    )
+
+    class Meta:
+        db_table = 'Memfamily'
 
 
 # 데이터베이스의 회원과 직업 테이블을 연결한 테이블과 연동하기 위한 클래스
@@ -283,27 +258,6 @@ class MemJob(models.Model):
 
     class Meta:
         db_table = 'Memjob'
-
-
-# 데이터베이스의 회원과 질병 테이블을 연결한 테이블과 연동하기 위한 클래스
-class MemDisable(models.Model):
-    memDisableId = models.AutoField(
-        primary_key=True,
-        db_column='memdisableid'
-    )
-    socialId = models.ForeignKey(
-        Member,
-        on_delete=models.CASCADE,
-        db_column='socialid'
-    )
-    disableId = models.ForeignKey(
-        Disable,
-        on_delete=models.CASCADE,
-        db_column='disableid'
-    )
-
-    class Meta:
-        db_table = 'Memdisable'
 
 
 # 데이터베이스의 회원과 복지 테이블을 연결한 테이블과 연동하기 위한 클래스
@@ -337,48 +291,6 @@ class MemWelfare(models.Model):
 
     class Meta:
         db_table = 'Memwelfare'
-
-
-# 데이터베이스의 회원과 가구유형 테이블을 연결한 테이블과 연동하기 위한 클래스
-class MemHouseType(models.Model):
-    memHouseTypeId = models.AutoField(
-        primary_key=True,
-        db_column='memhousetypeid'
-    )
-    socialId = models.ForeignKey(
-        Member,
-        on_delete=models.CASCADE,
-        db_column='socialid'
-    )
-    houseTypeId = models.ForeignKey(
-        HouseType,
-        on_delete=models.CASCADE,
-        db_column='housetypeid'
-    )
-
-    class Meta:
-        db_table = 'Memhousetype'
-
-
-# 데이터베이스의 회원과 욕구 테이블을 연결한 테이블과 연동하기 위한 클래스
-class MemDesire(models.Model):
-    memDesireId = models.AutoField(
-        primary_key=True,
-        db_column='memdesireid'
-    )
-    socialId = models.ForeignKey(
-        Member,
-        on_delete=models.CASCADE,
-        db_column='socialid'
-    )
-    desireId = models.ForeignKey(
-        Desire,
-        on_delete=models.CASCADE,
-        db_column='desireid'
-    )
-
-    class Meta:
-        db_table = 'Memdesire'
 
 
 # 데이터베이스의 회원과 대상특성 테이블을 연결한 테이블과 연동하기 위한 클래스
@@ -423,22 +335,64 @@ class MemLifeCycle(models.Model):
         db_table = 'Memlifecycle'
 
 
-# 데이터베이스의 회원과 가족 구성원 테이블을 연결한 테이블과 연동하기 위한 클래스
-class MemFamily(models.Model):
-    memFamilyId = models.AutoField(
+# 데이터베이스의 회원과 욕구 테이블을 연결한 테이블과 연동하기 위한 클래스
+class MemDesire(models.Model):
+    memDesireId = models.AutoField(
         primary_key=True,
-        db_column='memfamilyid'
+        db_column='memdesireid'
     )
     socialId = models.ForeignKey(
         Member,
         on_delete=models.CASCADE,
         db_column='socialid'
     )
-    familyId = models.ForeignKey(
-        Family,
+    desireId = models.ForeignKey(
+        Desire,
         on_delete=models.CASCADE,
-        db_column='familyid'
+        db_column='desireid'
     )
 
     class Meta:
-        db_table = 'Memfamily'
+        db_table = 'Memdesire'
+
+
+# 데이터베이스의 회원과 가구유형 테이블을 연결한 테이블과 연동하기 위한 클래스
+class MemHouseType(models.Model):
+    memHouseTypeId = models.AutoField(
+        primary_key=True,
+        db_column='memhousetypeid'
+    )
+    socialId = models.ForeignKey(
+        Member,
+        on_delete=models.CASCADE,
+        db_column='socialid'
+    )
+    houseTypeId = models.ForeignKey(
+        HouseType,
+        on_delete=models.CASCADE,
+        db_column='housetypeid'
+    )
+
+    class Meta:
+        db_table = 'Memhousetype'
+
+
+# 데이터베이스의 회원과 질병 테이블을 연결한 테이블과 연동하기 위한 클래스
+class MemDisable(models.Model):
+    memDisableId = models.AutoField(
+        primary_key=True,
+        db_column='memdisableid'
+    )
+    socialId = models.ForeignKey(
+        Member,
+        on_delete=models.CASCADE,
+        db_column='socialid'
+    )
+    disableId = models.ForeignKey(
+        Disable,
+        on_delete=models.CASCADE,
+        db_column='disableid'
+    )
+
+    class Meta:
+        db_table = 'Memdisable'
