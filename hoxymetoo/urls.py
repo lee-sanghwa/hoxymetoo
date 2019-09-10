@@ -27,6 +27,9 @@ from django.contrib import admin
 from django.urls import include, path
 from rest_framework import routers
 from hoxymetoo import settings
+from addresses.views import SiDoViewSet
+from addresses.views import SiGunGuViewSet
+from addresses.views import AddressViewSet
 from members.views import MemberViewSet
 from welfares.views import WelfareViewSet
 from qnas.views import CategoryViewSet, QuestionViewSet, AnswerViewSet, QnaViewSet
@@ -34,6 +37,9 @@ from chatbot.views import ChatBotViewSet
 from receivableMoney.views import MemberReceivableMoneyViewSet
 
 router = routers.DefaultRouter(trailing_slash=False)
+router.register('sido', SiDoViewSet, basename="sido")
+router.register('sigungu', SiGunGuViewSet, basename="sigungu")
+router.register('address', AddressViewSet, basename="address")
 router.register('members', MemberViewSet, basename="members")
 router.register('welfares', WelfareViewSet, basename="welfares")
 router.register('categories', CategoryViewSet, basename="categories")
