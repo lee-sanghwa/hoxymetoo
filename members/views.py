@@ -10,7 +10,8 @@
 - 서버에서 생성가능한 데이터는 서버에서 처리
 """
 
-from members.models import Member, Job, SiDo, SiGunGu
+from addresses.models import Address
+from members.models import Member, Job
 from welfares.models import HouseType, Desire, TargetCharacter, LifeCycle, Disable, Welfare
 from members.serializers import MemberSerializer
 from hoxymetoo.key import aes_key
@@ -159,7 +160,9 @@ class MemberViewSet(viewsets.ModelViewSet):
         return UpdateModelMixin.update(self, request, *args, **kwargs)
 
     def list(self, request, *args, **kwargs):
-        new_queryset = Member.objects.filter(socialId=None)
+        new_queryset = Member.objects.all()
+        # 보안성을 위해 배포시에 주석 해제
+        # new_queryset = Member.objects.filter(socialId=None)
         social_id = request.GET.get('socialId', None)
 
         if social_id is not None:
@@ -191,16 +194,12 @@ class MemberViewSet(viewsets.ModelViewSet):
         return Response(decrypt_member_data)
 
     def changeAddressToString(self, serializer_data):
-        si_do_id = serializer_data['siDoId']
-        si_gun_gu_id = serializer_data['siGunGuId']
+        mem_address_id = serializer_data['memAddressId']
 
-        if si_do_id is not None:
-            si_do_name = SiDo.objects.get(siDoId=si_do_id).siDoName
-            serializer_data['siDoId'] = si_do_name
+        if mem_address_id is not None:
+            mem_address_name = Address.objects.get(addressId=mem_address_id).siDoSiGunGuName
+            serializer_data['memAddressId'] = mem_address_name
 
-        if si_gun_gu_id is not None:
-            si_gun_gu_name = SiGunGu.objects.get(siGunGuId=si_gun_gu_id).siGunGuName
-            serializer_data['siGunGuId'] = si_gun_gu_name
         return serializer_data
 
     def decryptMemberData(self, social_id, member_data):
