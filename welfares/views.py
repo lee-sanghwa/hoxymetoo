@@ -9,8 +9,9 @@
 - HTTP METHOD에 따라서 CREATE, PATCH에 대해 through를 통해 생성된 manytomany 필드에 대한 유효성 검사
 """
 
-from welfares.models import Welfare, Disable, HouseType, Desire, TargetCharacter, LifeCycle, Responsible
-from welfares.serializers import WelfareSerializer
+from welfares.models import Welfare, Disable, HouseType, Desire, TargetCharacter, LifeCycle, Responsible, Index, \
+    WelIndex
+from welfares.serializers import WelfareSerializer, IndexSerializer, WelfareIndexSerializer
 from rest_framework import viewsets, status
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.mixins import CreateModelMixin, UpdateModelMixin, ListModelMixin
@@ -121,3 +122,13 @@ class WelfareViewSet(viewsets.ModelViewSet):
         self.queryset = existing_queryset
 
         return ListModelMixin.list(self, request, *args, **kwargs)
+
+
+class IndexViewSet(viewsets.ModelViewSet):
+    queryset = Index.objects.all()
+    serializer_class = IndexSerializer
+
+
+class WelfareIndexViewSet(viewsets.ModelViewSet):
+    queryset = WelIndex.objects.all()
+    serializer_class = WelfareIndexSerializer

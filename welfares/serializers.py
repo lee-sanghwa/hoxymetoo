@@ -10,7 +10,7 @@
 
 from rest_framework import serializers
 from welfares.models import Welfare, HouseType, WelHouseType, Disable, WelDisable, Desire, WelDesire, \
-    TargetCharacter, WelTargetCharacter, LifeCycle, WelLifeCycle, Responsible, WelResponsible
+    TargetCharacter, WelTargetCharacter, LifeCycle, WelLifeCycle, Responsible, WelResponsible, Index, WelIndex
 
 
 class WelfareSerializer(serializers.ModelSerializer):
@@ -279,4 +279,16 @@ class WelfareSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Welfare
+        fields = '__all__'
+
+
+class IndexSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Index
+        fields = '__all__'
+
+
+class WelfareIndexSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = WelIndex
         fields = '__all__'
