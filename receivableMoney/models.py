@@ -16,6 +16,7 @@ from members.models import Member
 class MemberReceivableMoney(models.Model):
     socialId = models.OneToOneField(
         Member,
+        to_field='memKey',
         primary_key=True,
         on_delete=models.CASCADE,
         db_column='socialid'
