@@ -21,82 +21,31 @@ class MemberSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         cursor = connection.cursor()
         unvalidated_data = self.context['request'].data
-        jobs = unvalidated_data.get('jobs', [])
-        disables = unvalidated_data.get('disables', [])
-        welfares = unvalidated_data.get('welfares', [])
-        house_types = unvalidated_data.get('houseTypes', [])
-        desires = unvalidated_data.get('desires', [])
-        target_characters = unvalidated_data.get('targetCharacters', [])
-        life_cycles = unvalidated_data.get('lifeCycles', [])
-        families = unvalidated_data.get('families', [])
-
         instance = self.decryptMemberData(cursor=cursor, validated_data=validated_data, command='CREATE')
 
         # 회원의 직업에 대한 처리
-        for job in jobs:
-            job_instance = Job.objects.get(jobId=job)
-            mem_job_data = {
-                'socialId': instance,
-                'jobId': job_instance
-            }
-            MemJob.objects.create(**mem_job_data)
+        self.createWithUnvalidatedDate('job', unvalidated_data.get('jobs', []), instance)
 
         # 회원의 질병에 대한 처리
-        for disable in disables:
-            disable_instance = Disable.objects.get(disableId=disable)
-            mem_disable_data = {
-                'socialId': instance,
-                'disableId': disable_instance
-            }
-            MemDisable.objects.create(**mem_disable_data)
+        self.createWithUnvalidatedDate('disable', unvalidated_data.get('disables', []), instance)
 
         # 회원이 받을 수 있는 복에 대한 처리 (아마 회원 생성 단계에서는 불가능할 것으로 보임)
-        for welfare in welfares:
-            welfare_instance = Welfare.objects.get(welId=welfare)
-            mem_welfare_data = {
-                'socialId': instance,
-                'welId': welfare_instance
-            }
-            MemWelfare.objects.create(**mem_welfare_data)
+        self.createWithUnvalidatedDate('welfare', unvalidated_data.get('welfares', []), instance)
 
         # 회원의 가구유형에 대한 처리
-        for house_type in house_types:
-            house_type_instance = HouseType.objects.get(houseTypeId=house_type)
-            mem_house_type_data = {
-                'socialId': instance,
-                'houseTypeId': house_type_instance
-            }
-            MemHouseType.objects.create(**mem_house_type_data)
+        self.createWithUnvalidatedDate('house_type', unvalidated_data.get('houseTypes', []), instance)
 
         # 회원의 욕구에 대한 처리
-        for desire in desires:
-            desire_instance = Desire.objects.get(desireId=desire)
-            mem_desire_data = {
-                'socialId': instance,
-                'desireId': desire_instance
-            }
-            MemDesire.objects.create(**mem_desire_data)
+        self.createWithUnvalidatedDate('desire', unvalidated_data.get('desires', []), instance)
 
         # 회원의 대상특성에 대한 처리
-        for target_character in target_characters:
-            target_character_instance = TargetCharacter.objects.get(targetCharacterId=target_character)
-            mem_target_character_data = {
-                'socialId': instance,
-                'targetCharacterId': target_character_instance
-            }
-            MemTargetCharacter.objects.create(**mem_target_character_data)
+        self.createWithUnvalidatedDate('target_character', unvalidated_data.get('targetCharacters', []), instance)
 
         # 회원의 생애주기에 대한 처리
-        for life_cycle in life_cycles:
-            life_cycle_instance = LifeCycle.objects.get(lifeCycleId=life_cycle)
-            mem_life_cycle_data = {
-                'socialId': instance,
-                'lifeCycleId': life_cycle_instance
-            }
-            MemLifeCycle.objects.create(**mem_life_cycle_data)
+        self.createWithUnvalidatedDate('life_cycle', unvalidated_data.get('lifeCycles', []), instance)
 
         # 회원의 가족 구성원에 대한 처리
-        for family_member in families:
+        for family_member in unvalidated_data.get('families', []):
             family_member_birth = family_member['familyBirth']
             family_member_gender = family_member['familyGender']
             family_member_info = str(family_member_birth) + '-' + str(family_member_gender)
@@ -445,20 +394,28 @@ class MemberSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
     def decryptMemberData(self, cursor, validated_data, command):
-        mem_data = {'socialid': validated_data.get('socialId'), 'pushtoken': validated_data.get('pushToken'),
-                    'memkey': validated_data.get('memKey'), 'email': validated_data.get('memEmail'),
-                    'password': validated_data.get('memPassword'),
-                    'receivablemoney': validated_data.get('memReceivableMoney'),
-                    'receivablemoneydescribe': validated_data.get('memReceivableMoneyDescribe'),
-                    'st_birthday': validated_data.get('memBirthday'), 'st_gender': validated_data.get('memGender'),
-                    'st_family': validated_data.get('memFamily'), 'st_income': validated_data.get('memIncome'),
-                    'st_bohun': validated_data.get('memBohun'),
-                    'memaddressid': validated_data.get('memAddressId').addressId,
-                    'createdatetime': validated_data.get('createDateTime'),
-                    'createdate': validated_data.get('createDate'),
-                    'createtime': validated_data.get('createTime'),
-                    'updatedatetime': validated_data.get('updateDateTime'),
-                    'updatedate': validated_data.get('updateDate'), 'updatetime': validated_data.get('updateTime')}
+        mem_data = {
+            'socialid': validated_data.get('socialId'),
+            'pushtoken': validated_data.get('pushToken'),
+            'memkey': validated_data.get('memKey'),
+            'email': validated_data.get('memEmail'),
+            'password': validated_data.get('memPassword'),
+            'receivablemoney': validated_data.get('memReceivableMoney'),
+            'receivablemoneydescribe': validated_data.get('memReceivableMoneyDescribe'),
+            'st_birthday': validated_data.get('memBirthday'),
+            'st_gender': validated_data.get('memGender'),
+            'st_family': validated_data.get('memFamily'),
+            'st_income': validated_data.get('memIncome'),
+            'st_bohun': validated_data.get('memBohun'),
+            'memaddressid': validated_data.get('memAddressId').addressId if validated_data.get('memAddressId')
+                                                                            is not None else None,
+            'createdatetime': validated_data.get('createDateTime'),
+            'createdate': validated_data.get('createDate'),
+            'createtime': validated_data.get('createTime'),
+            'updatedatetime': validated_data.get('updateDateTime'),
+            'updatedate': validated_data.get('updateDate'),
+            'updatetime': validated_data.get('updateTime')
+        }
 
         social_id = mem_data['socialid']
         mem_email = mem_data['email']
@@ -471,32 +428,32 @@ class MemberSerializer(serializers.ModelSerializer):
         if mem_email is not None:
             aes_encrypt_query_email = "HEX(AES_ENCRYPT('{memEmail}', '{aesKey}'))".format(memEmail=mem_email,
                                                                                           aesKey=aes_key)
-            validated_data['memEmail'] = aes_encrypt_query_email
+            mem_data['email'] = aes_encrypt_query_email
 
         if mem_birthday is not None:
             aes_encrypt_query_birthday = "HEX(AES_ENCRYPT('{memBirthday}', '{aesKey}'))".format(
                 memBirthday=mem_birthday, aesKey=aes_key)
-            validated_data['memBirthday'] = aes_encrypt_query_birthday
+            mem_data['st_birthday'] = aes_encrypt_query_birthday
 
         if mem_gender is not None:
             aes_encrypt_query_gender = "HEX(AES_ENCRYPT('{memGender}', '{aesKey}'))".format(memGender=mem_gender,
                                                                                             aesKey=aes_key)
-            validated_data['memGender'] = aes_encrypt_query_gender
+            mem_data['st_gender'] = aes_encrypt_query_gender
 
         if mem_family is not None:
             aes_encrypt_query_family = "HEX(AES_ENCRYPT('{memFamily}', '{aesKey}'))".format(memFamily=mem_family,
                                                                                             aesKey=aes_key)
-            validated_data['memFamily'] = aes_encrypt_query_family
+            mem_data['st_family'] = aes_encrypt_query_family
 
         if mem_income is not None:
             aes_encrypt_query_income = "HEX(AES_ENCRYPT('{memIncome}', '{aesKey}'))".format(memIncome=mem_income,
                                                                                             aesKey=aes_key)
-            validated_data['memIncome'] = aes_encrypt_query_income
+            mem_data['st_income'] = aes_encrypt_query_income
 
         if mem_bohun is not None:
             aes_encrypt_query_bohun = "HEX(AES_ENCRYPT('{memBohun}', '{aesKey}'))".format(memBohun=mem_bohun,
                                                                                           aesKey=aes_key)
-            validated_data['memBohun'] = aes_encrypt_query_bohun
+            mem_data['st_bohun'] = aes_encrypt_query_bohun
 
         clone_of_mem_data = mem_data.copy()
 
@@ -546,3 +503,35 @@ class MemberSerializer(serializers.ModelSerializer):
         instance = Member.objects.get(socialId=social_id)
 
         return instance
+
+    def findModelInformation(self, string):
+        strings_with_models = {
+            'job': (Job, MemJob, 'jobId'),
+            'disable': (Disable, MemDisable, 'disableId'),
+            'welfare': (Welfare, MemWelfare, 'welId'),
+            'house_type': (HouseType, MemHouseType, 'houseTypeId'),
+            'desire': (Desire, MemDesire, 'desireId'),
+            'target_character': (TargetCharacter, MemTargetCharacter, 'targetCharacterId'),
+            'life_cycle': (LifeCycle, MemLifeCycle, 'lifeCycleId')
+        }
+        return strings_with_models.get(string, None)
+
+    def createWithUnvalidatedDate(self, name, unvalidated_datas, instance):
+        model_informations = self.findModelInformation(name)
+        if model_informations is None:
+            return None
+        else:
+            model = model_informations[0]
+            model_associated_with_member = model_informations[1]
+            model_column_name = model_informations[2]
+            for unvalidated_data in unvalidated_datas:
+                kwargs = {
+                    model_column_name: unvalidated_data
+                }
+                model_instance = model.objects.get(**kwargs)
+                kwargs_associated_with_member = {
+                    'socialId': instance,
+                    model_column_name: model_instance
+                }
+                model_associated_with_member.objects.create(**kwargs_associated_with_member)
+            print('createWithUnvalidatedDate success')
