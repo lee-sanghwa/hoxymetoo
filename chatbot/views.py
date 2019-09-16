@@ -17,7 +17,9 @@ from datetime import datetime
 
 
 class ChatBotViewSet(viewsets.ModelViewSet):
-    queryset = ChatLog.objects.filter(chatLogId=None)
+    queryset = ChatLog.objects.all()
+    # 보안성을 위해 배포시에 주석 해제
+    # queryset = ChatLog.objects.filter(chatLogId=None)
     serializer_class = ChatLogSenderSerializer
 
     # HTTP METHOD의 POST
