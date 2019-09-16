@@ -14,12 +14,12 @@ from members.models import Member
 
 # 데이터베이스의 회원과 수혜가능한 금액의 테이블을 연결한 테이블과 연동하기 위한 클래스
 class MemberReceivableMoney(models.Model):
-    socialId = models.OneToOneField(
+    memKey = models.OneToOneField(
         Member,
         to_field='memKey',
         primary_key=True,
         on_delete=models.CASCADE,
-        db_column='socialid'
+        db_column='memkey'
     )
     money1 = models.IntegerField(
         null=True,
