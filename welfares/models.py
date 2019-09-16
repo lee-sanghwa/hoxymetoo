@@ -374,6 +374,10 @@ class Welfare(models.Model):
         Responsible,
         through='WelResponsible'
     )
+    indexes = models.ManyToManyField(
+        Index,
+        through='WelIndex'
+    )
 
     class Meta:
         db_table = 'Welfare'
