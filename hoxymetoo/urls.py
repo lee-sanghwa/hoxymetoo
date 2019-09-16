@@ -31,7 +31,7 @@ from addresses.views import SiDoViewSet
 from addresses.views import SiGunGuViewSet
 from addresses.views import AddressViewSet
 from members.views import MemberViewSet
-from welfares.views import WelfareViewSet
+from welfares.views import WelfareViewSet, IndexViewSet, WelfareIndexViewSet
 from qnas.views import CategoryViewSet, QuestionViewSet, AnswerViewSet, QnaViewSet
 from chatbot.views import ChatBotViewSet
 from receivableMoney.views import MemberReceivableMoneyViewSet
@@ -42,12 +42,14 @@ router.register('sigungu', SiGunGuViewSet, basename="sigungu")
 router.register('address', AddressViewSet, basename="address")
 router.register('members', MemberViewSet, basename="members")
 router.register('welfares', WelfareViewSet, basename="welfares")
+router.register('indexes', IndexViewSet, basename="indexes")
+router.register('welindexes', WelfareIndexViewSet, basename="welindexes")
 router.register('categories', CategoryViewSet, basename="categories")
 router.register('questions', QuestionViewSet, basename="questions")
 router.register('answers', AnswerViewSet, basename="answers")
 router.register('qnas', QnaViewSet, basename="qnas")
 router.register('chatlogs', ChatBotViewSet, basename="chatlogs")
-router.register('receivablemoney', MemberReceivableMoneyViewSet, basename='receivablemoney')
+router.register('receivablemoney', MemberReceivableMoneyViewSet, basename="receivablemoney")
 
 urlpatterns = [
     path('admin/', admin.site.urls),
