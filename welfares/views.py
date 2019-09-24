@@ -13,6 +13,7 @@ from welfares.models import Welfare, Disable, HouseType, Desire, TargetCharacter
     WelIndex
 from welfares.serializers import WelfareSerializer, IndexSerializer, WelfareIndexSerializer
 from rest_framework import viewsets, status
+from rest_framework.decorators import api_view
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.mixins import CreateModelMixin, UpdateModelMixin, ListModelMixin
 from rest_framework.response import Response
@@ -132,3 +133,21 @@ class IndexViewSet(viewsets.ModelViewSet):
 class WelfareIndexViewSet(viewsets.ModelViewSet):
     queryset = WelIndex.objects.all()
     serializer_class = WelfareIndexSerializer
+
+
+@api_view()
+def create_disable_data_in_database(request):
+    from welfares.models import DisableType, DisableLevel
+
+    disable_type_list = DisableType.objects.all()
+    disable_level_list = DisableLevel.objects.all()
+
+    for disable_type in disable_type_list:
+        disable_type_name = disable_type.disableTypeName
+        for disable_level in disable_level_list:
+            disable = Disable.objects.create(disableTypeId=disable_type,
+                                             disableLevelId=disable_level,
+                                             disableName=disable_type_name + ' ' + disable_level.disableLevelName)
+            disable.save()
+
+    return Response("success")
