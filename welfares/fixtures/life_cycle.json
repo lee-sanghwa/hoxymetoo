@@ -1,0 +1,45 @@
+[
+  {
+    "model": "welfares.Lifecycle",
+    "fields": {
+      "lifeCycleId": "001",
+      "lifeCycleName": "영유아"
+    }
+  },
+  {
+    "model": "welfares.Lifecycle",
+    "fields": {
+      "lifeCycleId": "002",
+      "lifeCycleName": "아동"
+    }
+  },
+  {
+    "model": "welfares.Lifecycle",
+    "fields": {
+      "lifeCycleId": "003",
+      "lifeCycleName": "청소년"
+    }
+  },
+  {
+    "model": "welfares.Lifecycle",
+    "pk": 4,
+    "fields": {
+      "lifeCycleId": "004",
+      "lifeCycleName": "청년"
+    }
+  },
+  {
+    "model": "welfares.Lifecycle",
+    "fields": {
+      "lifeCycleId": "005",
+      "lifeCycleName": "중장년"
+    }
+  },
+  {
+    "model": "welfares.Lifecycle",
+    "fields": {
+      "lifeCycleId": "006",
+      "lifeCycleName": "노년"
+    }
+  }
+]

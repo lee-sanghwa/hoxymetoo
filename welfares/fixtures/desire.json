@@ -1,0 +1,79 @@
+[
+  {
+    "model": "welfares.Desire",
+    "fields": {
+      "desireId": "0000000",
+      "desireName": "안전"
+    }
+  },
+  {
+    "model": "welfares.Desire",
+    "fields": {
+      "desireId": "1000000",
+      "desireName": "건강"
+    }
+  },
+  {
+    "model": "welfares.Desire",
+    "fields": {
+      "desireId": "2000000",
+      "desireName": "일상생활유지"
+    }
+  },
+  {
+    "model": "welfares.Desire",
+    "fields": {
+      "desireId": "3000000",
+      "desireName": "가족관계"
+    }
+  },
+  {
+    "model": "welfares.Desire",
+    "fields": {
+      "desireId": "4000000",
+      "desireName": "사회적 관계"
+    }
+  },
+  {
+    "model": "welfares.Desire",
+    "fields": {
+      "desireId": "5000000",
+      "desireName": "경제"
+    }
+  },
+  {
+    "model": "welfares.Desire",
+    "fields": {
+      "desireId": "6000000",
+      "desireName": "교육"
+    }
+  },
+  {
+    "model": "welfares.Desire",
+    "fields": {
+      "desireId": "7000000",
+      "desireName": "고용"
+    }
+  },
+  {
+    "model": "welfares.Desire",
+    "fields": {
+      "desireId": "8000000",
+      "desireName": "생활환경"
+    }
+  },
+  {
+    "model": "welfares.Desire",
+    "fields": {
+      "desireId": "9000000",
+      "desireName": "법률 및 권익보장"
+    }
+  },
+  {
+    "model": "welfares.Desire",
+    "fields": {
+      "desireId": "A000000",
+      "desireName": "기타"
+    }
+  }
+]
