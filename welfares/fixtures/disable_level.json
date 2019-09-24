@@ -2,42 +2,42 @@
   {
     "model": "welfares.Disablelevel",
     "fields": {
-      "houseTypeId": 1,
+      "disableLevelId": 1,
       "disableLevelName": "1급"
     }
   },
   {
     "model": "welfares.Disablelevel",
     "fields": {
-      "houseTypeId": 2,
+      "disableLevelId": 2,
       "disableLevelName": "2급"
     }
   },
   {
     "model": "welfares.Disablelevel",
     "fields": {
-      "houseTypeId": 3,
+      "disableLevelId": 3,
       "disableLevelName": "3급"
     }
   },
   {
     "model": "welfares.Disablelevel",
     "fields": {
-      "houseTypeId": 4,
+      "disableLevelId": 4,
       "disableLevelName": "4급"
     }
   },
   {
     "model": "welfares.Disablelevel",
     "fields": {
-      "houseTypeId": 5,
+      "disableLevelId": 5,
       "disableLevelName": "5급"
     }
   },
   {
     "model": "welfares.Disablelevel",
     "fields": {
-      "houseTypeId": 6,
+      "disableLevelId": 6,
       "disableLevelName": "6급"
     }
   }
