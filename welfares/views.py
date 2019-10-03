@@ -119,6 +119,8 @@ class WelfareViewSet(viewsets.ModelViewSet):
 
         if offset is not None:
             pagination_class.page_size = offset
+        else:
+            pagination_class.page_size = 10
 
         self.queryset = existing_queryset
 
