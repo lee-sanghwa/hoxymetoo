@@ -534,4 +534,3 @@ class MemberSerializer(serializers.ModelSerializer):
                     model_column_name: model_instance
                 }
                 model_associated_with_member.objects.create(**kwargs_associated_with_member)
-            print('createWithUnvalidatedDate success')
