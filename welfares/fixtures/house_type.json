@@ -10,7 +10,7 @@
     "model": "welfares.Housetype",
     "fields": {
       "houseTypeId": "002",
-      "houseTypeName": "한부"
+      "houseTypeName": "한부모"
     }
   },
   {
