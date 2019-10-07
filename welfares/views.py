@@ -9,9 +9,11 @@
 - HTTP METHOD에 따라서 CREATE, PATCH에 대해 through를 통해 생성된 manytomany 필드에 대한 유효성 검사
 """
 
-from welfares.models import Welfare, Disable, HouseType, Desire, TargetCharacter, LifeCycle, Responsible, Index, \
-    WelIndex
-from welfares.serializers import WelfareSerializer, IndexSerializer, WelfareIndexSerializer
+from welfares.models import Welfare, DisableType, DisableLevel, Disable, HouseType, Desire, TargetCharacter, \
+    LifeCycle, Responsible, Index, WelIndex
+from welfares.serializers import WelfareSerializer, IndexSerializer, WelfareIndexSerializer, DisableSerializer, \
+    DisableTypeSerializer, DisableLevelSerializer, HouseTypeSerializer, DesireSerializer, TargetCharacterSerializer, \
+    LifeCycleSerializer
 from rest_framework import viewsets, status
 from rest_framework.decorators import api_view
 from rest_framework.pagination import PageNumberPagination
@@ -135,6 +137,41 @@ class IndexViewSet(viewsets.ModelViewSet):
 class WelfareIndexViewSet(viewsets.ModelViewSet):
     queryset = WelIndex.objects.all()
     serializer_class = WelfareIndexSerializer
+
+
+class DisableTypeViewSet(viewsets.ModelViewSet):
+    queryset = DisableType.objects.all()
+    serializer_class = DisableTypeSerializer
+
+
+class DisableLevelViewSet(viewsets.ModelViewSet):
+    queryset = DisableLevel.objects.all()
+    serializer_class = DisableLevelSerializer
+
+
+class DisableViewSet(viewsets.ModelViewSet):
+    queryset = Disable.objects.all()
+    serializer_class = DisableSerializer
+
+
+class HouseTypeViewSet(viewsets.ModelViewSet):
+    queryset = HouseType.objects.all()
+    serializer_class = HouseTypeSerializer
+
+
+class DesireViewSet(viewsets.ModelViewSet):
+    queryset = Desire.objects.all()
+    serializer_class = DesireSerializer
+
+
+class TargetCharacterViewSet(viewsets.ModelViewSet):
+    queryset = TargetCharacter.objects.all()
+    serializer_class = TargetCharacterSerializer
+
+
+class LifeCycleViewSet(viewsets.ModelViewSet):
+    queryset = LifeCycle.objects.all()
+    serializer_class = LifeCycleSerializer
 
 
 @api_view()
