@@ -313,12 +313,6 @@ class DisableSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class DisableSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Disable
-        fields = '__all__'
-
-
 class HouseTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = HouseType
@@ -327,7 +321,7 @@ class HouseTypeSerializer(serializers.ModelSerializer):
 
 class DesireSerializer(serializers.ModelSerializer):
     class Meta:
-        model = WelIndex
+        model = Desire
         fields = '__all__'
 
 
