@@ -16,6 +16,7 @@ from welfares.models import HouseType, Desire, TargetCharacter, LifeCycle, Disab
 from members.serializers import MemberSerializer
 from hoxymetoo.key import aes_key
 from django.db import connection
+from django.db.models import Q
 from rest_framework import viewsets, status
 from rest_framework.mixins import CreateModelMixin, UpdateModelMixin, ListModelMixin
 from rest_framework.response import Response
@@ -317,7 +318,8 @@ class MemberViewSet(viewsets.ModelViewSet):
         """
 
         if has_character == 0:
-            list_of_recommend_welfare = Welfare.objects.filter(welAddressId=address_id_of_member)[:100]
+            list_of_recommend_welfare = Welfare.objects.filter(
+                Q(welAddressId=address_id_of_member) | Q(welAddressId=27))[:100]
         else:
             list_of_recommend_welfare = Welfare.objects.raw(query_of_create_welfare_of_member)
 
