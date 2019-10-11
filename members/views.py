@@ -11,7 +11,7 @@
 """
 
 from addresses.models import Address
-from members.models import Member, Job
+from members.models import Member, Job, MemDesire, MemLifeCycle, MemTargetCharacter, MemHouseType, MemWelfare
 from welfares.models import HouseType, Desire, TargetCharacter, LifeCycle, Disable, Welfare
 from members.serializers import MemberSerializer
 from hoxymetoo.key import aes_key
@@ -23,6 +23,7 @@ from datetime import datetime
 import hashlib
 import logging
 import json
+import time
 
 logger = logging.getLogger(__name__)
 
@@ -101,7 +102,19 @@ class MemberViewSet(viewsets.ModelViewSet):
         request.POST._mutable = mutable
 
         # 이 데이터를 토대로 멤버 생성
-        return CreateModelMixin.create(self, request, *args, **kwargs)
+        CreateModelMixin.create(self, request, *args, **kwargs)
+
+        instance = Member.objects.get(socialId=social_id)
+        serializer = self.get_serializer(instance)
+        serializer_data = serializer.data
+
+        list_of_welfare_of_recommend = self.select_welfare_of_member(social_id)
+        for welfare_of_recommend in list_of_welfare_of_recommend:
+            MemWelfare.objects.get_or_create(socialId=instance, welId=welfare_of_recommend)
+
+        member_data = self.changeAddressToString(serializer_data)
+        decrypt_member_data = self.decryptMemberData(social_id=social_id, member_data=member_data)
+        return Response(decrypt_member_data)
 
     # HTTP METHOD의 PATCH
     def update(self, request, *args, **kwargs):
@@ -169,7 +182,21 @@ class MemberViewSet(viewsets.ModelViewSet):
         kwargs['partial'] = True
 
         # 이 데이터를 토대로 멤버 수정
-        return UpdateModelMixin.update(self, request, *args, **kwargs)
+        UpdateModelMixin.update(self, request, *args, **kwargs)
+
+        instance = Member.objects.get(socialId=social_id)
+        serializer = self.get_serializer(instance)
+        serializer_data = serializer.data
+
+        MemWelfare.objects.filter(socialId=instance).delete()
+
+        list_of_welfare_of_recommend = self.select_welfare_of_member(social_id)
+        for welfare_of_recommend in list_of_welfare_of_recommend:
+            MemWelfare.objects.get_or_create(socialId=instance, welId=welfare_of_recommend)
+
+        member_data = self.changeAddressToString(serializer_data)
+        decrypt_member_data = self.decryptMemberData(social_id=social_id, member_data=member_data)
+        return Response(decrypt_member_data)
 
     def list(self, request, *args, **kwargs):
         request_log_data = self.create_log_content(request)
@@ -248,3 +275,101 @@ class MemberViewSet(viewsets.ModelViewSet):
         request_info_string += ' | HTTP_USER_AGENT : ' + meta_data_of_request.get('HTTP_USER_AGENT')
 
         return request_info_string
+
+    def select_welfare_of_member(self, social_id):
+        address_id_of_member = Member.objects.get(socialId=social_id).memAddressId_id
+        if address_id_of_member is None:
+            address_id_of_member = 27
+
+        all_kind_of_character = ("desire", "lifeCycle", "targetCharacter", "houseType")
+        query_of_create_welfare_of_member = """
+        SELECT TEMP.welid, TEMP.weladdressid, COUNT(TEMP.welid) AS cnt
+        FROM (
+        """
+
+        flag_of_writing_union = False
+        has_character = len(all_kind_of_character)
+
+        for kind_of_character in all_kind_of_character:
+            list_of_character_id = self.select_member_character(social_id, kind_of_character)
+            query = self.make_query_for_welfare_of_member(kind_of_character, list_of_character_id)
+
+            if flag_of_writing_union:
+                query_of_create_welfare_of_member += """
+                UNION ALL
+                """
+
+            query_of_create_welfare_of_member += query
+
+            if query == "":
+                flag_of_writing_union = False
+                has_character -= 1
+            else:
+                flag_of_writing_union = True
+
+        query_of_create_welfare_of_member += f"""
+        ) TEMP
+        WHERE TEMP.weladdressid = 27
+        OR TEMP.weladdressid = {address_id_of_member} 
+        GROUP BY TEMP.welid
+        ORDER BY cnt DESC
+        LIMIT 100
+        """
+
+        if has_character == 0:
+            list_of_recommend_welfare = Welfare.objects.filter(welAddressId=address_id_of_member)[:100]
+        else:
+            list_of_recommend_welfare = Welfare.objects.raw(query_of_create_welfare_of_member)
+
+        return list_of_recommend_welfare
+
+    # 멤버의 특정 특이점에 대한 테이블에 대해 특이점 id들을 반환
+    def select_member_character(self, social_id, kind_of_character):
+        all_kind_of_character = {
+            "desire": MemDesire,
+            "lifeCycle": MemLifeCycle,
+            "targetCharacter": MemTargetCharacter,
+            "houseType": MemHouseType
+        }
+
+        json_of_constraint = {"socialId": social_id}
+        table_of_character = all_kind_of_character.get(kind_of_character)
+        column_of_character = kind_of_character + "Id"
+
+        list_of_character_id = []
+        if table_of_character is not None:
+            rows_of_character = table_of_character.objects.filter(**json_of_constraint)
+
+            for row_of_character in rows_of_character:
+                list_of_character_id.append(
+                    getattr(getattr(row_of_character, column_of_character), column_of_character))
+
+        return list_of_character_id
+
+    # houseType, ['001',]
+    # => 쿼리 생성
+    def make_query_for_welfare_of_member(self, name_of_character, list_of_character_id):
+        # housetype
+        lower_of_name_of_character = name_of_character.lower()
+
+        # Welhousetype
+        table_name = "Wel" + lower_of_name_of_character
+        # housetypeid
+        column_name = lower_of_name_of_character + "id"
+
+        query = ""
+
+        if len(list_of_character_id) > 0:
+            query += f"""
+            SELECT Welfare.welid, Welfare.weladdressid
+	        FROM Welfare
+            JOIN {table_name} ON {table_name}.welid = Welfare.welid
+            WHERE {table_name}.{column_name} = '{list_of_character_id[0]}'
+            """
+
+            for character_id in list_of_character_id[1:]:
+                query += f"""
+                OR {table_name}.{column_name} = '{character_id}'
+                """
+
+        return query
