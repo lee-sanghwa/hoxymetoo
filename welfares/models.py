@@ -344,6 +344,11 @@ class Welfare(models.Model):
         on_delete=models.CASCADE,
         db_column='weladdressid'
     )
+    crawlingSiteLink = models.TextField(
+        null=True,
+        blank=True,
+        db_column='crawlingsitelink'
+    )
     # 복지에 해당하는 질병들
     disables = models.ManyToManyField(
         Disable,
