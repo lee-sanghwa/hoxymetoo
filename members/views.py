@@ -312,7 +312,7 @@ class MemberViewSet(viewsets.ModelViewSet):
         OR TEMP.weladdressid = {address_id_of_member} 
         GROUP BY TEMP.welid
         ORDER BY cnt DESC
-        LIMIT 100
+        LIMIT 1000
         """
 
         if has_character == 0:
