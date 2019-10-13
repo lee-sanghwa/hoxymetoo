@@ -295,17 +295,15 @@ class MemberViewSet(viewsets.ModelViewSet):
             list_of_character_id = self.select_member_character(social_id, kind_of_character)
             query = self.make_query_for_welfare_of_member(kind_of_character, list_of_character_id)
 
-            if flag_of_writing_union:
-                query_of_create_welfare_of_member += """
-                UNION ALL
-                """
-
-            query_of_create_welfare_of_member += query
-
             if query == "":
-                flag_of_writing_union = False
                 has_character -= 1
             else:
+                if flag_of_writing_union:
+                    query_of_create_welfare_of_member += """
+                    UNION ALL
+                    """
+
+                query_of_create_welfare_of_member += query
                 flag_of_writing_union = True
 
         query_of_create_welfare_of_member += f"""
@@ -319,7 +317,7 @@ class MemberViewSet(viewsets.ModelViewSet):
 
         if has_character == 0:
             list_of_recommend_welfare = Welfare.objects.filter(
-                Q(welAddressId=address_id_of_member) | Q(welAddressId=27))[:100]
+                Q(welAddressId=address_id_of_member) | Q(welAddressId=27))
         else:
             list_of_recommend_welfare = Welfare.objects.raw(query_of_create_welfare_of_member)
 
