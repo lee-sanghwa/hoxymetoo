@@ -27,6 +27,7 @@ from django.contrib import admin
 from django.urls import include, path
 from rest_framework import routers
 from hoxymetoo import settings
+from hoxymetoo.views import index
 from addresses.views import SiDoViewSet, SiGunGuViewSet, AddressViewSet
 from members.views import MemberViewSet
 from welfares.views import WelfareViewSet, IndexViewSet, WelfareIndexViewSet, create_disable_data_in_database, \
@@ -59,6 +60,7 @@ router.register('chatlogs', ChatBotViewSet, basename="chatlogs")
 router.register('receivablemoney', MemberReceivableMoneyViewSet, basename="receivablemoney")
 
 urlpatterns = [
+    path('', index),
     path('admin/', admin.site.urls),
     path('api/', include(router.urls)),
     path('create-disable/', create_disable_data_in_database)
