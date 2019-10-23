@@ -251,3 +251,4 @@ fabric.properties
 # End of https://www.gitignore.io/api/macos,django,pycharm
 
 key.py
+chatbot/word2vec.model
