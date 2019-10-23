@@ -14,6 +14,7 @@ from welfares.models import Welfare, DisableType, DisableLevel, Disable, HouseTy
 from welfares.serializers import WelfareSerializer, IndexSerializer, WelfareIndexSerializer, DisableSerializer, \
     DisableTypeSerializer, DisableLevelSerializer, HouseTypeSerializer, DesireSerializer, TargetCharacterSerializer, \
     LifeCycleSerializer
+from django.db.models import Q
 from rest_framework import viewsets, status
 from rest_framework.decorators import api_view
 from rest_framework.pagination import PageNumberPagination
@@ -104,6 +105,7 @@ class WelfareViewSet(viewsets.ModelViewSet):
         target_character = query_dict.get('targetCharacter')
         life_cycle = query_dict.get('lifeCycle')
         responsible = query_dict.get('responsible')
+        search = query_dict.get('search')
         offset = query_dict.get('offset')
 
         if disable is not None:
@@ -123,6 +125,10 @@ class WelfareViewSet(viewsets.ModelViewSet):
             pagination_class.page_size = offset
         else:
             pagination_class.page_size = 10
+
+        if search is not None:
+            existing_queryset = Welfare.objects.filter(
+                Q(welName__icontains=search) | Q(welSummary__icontains=search) | Q(targetDetail__icontains=search))
 
         self.queryset = existing_queryset
 
