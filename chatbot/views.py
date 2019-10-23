@@ -11,7 +11,9 @@
 
 from chatbot.serializers import ChatLogSenderSerializer, ChatLogReceiverSerializer
 from chatbot.models import ChatLog
+from welfares.models import WelIndex
 from rest_framework import viewsets
+from rest_framework.response import Response
 from rest_framework.mixins import CreateModelMixin, ListModelMixin
 from datetime import datetime
 
@@ -58,6 +60,7 @@ class ChatBotViewSet(viewsets.ModelViewSet):
 
         receiver_member_key = chat_data.get('receiverMemKey', None)
         sender_member_key = chat_data.get('senderMemKey', None)
+        search = chat_data.get('search', None)
 
         if receiver_member_key is None and sender_member_key is not None:
             new_queryset = ChatLog.objects.filter(senderMemKey__memKey=sender_member_key)
@@ -70,4 +73,52 @@ class ChatBotViewSet(viewsets.ModelViewSet):
             self.queryset = new_queryset
             self.serializer_class = new_serializer_class
 
-        return ListModelMixin.list(self, request, *args, **kwargs);
+        if search is not None:
+            from gensim.models import Word2Vec
+            from konlpy.tag import Okt
+            import sys
+
+            okt = Okt()
+
+            token_list = okt.pos(phrase=search, stem=True, norm=True)  # 단어 토큰화
+
+            model = Word2Vec.load(f'{sys.path[0]}/chatbot/word2vec.model')
+
+            dict_similar_tokens = dict()
+            for token in token_list:
+                if token[1] in ['Noun']:
+                    try:
+                        similar_tokens = model.wv.most_similar(token[0])
+                    except KeyError:
+                        continue
+                    if similar_tokens:
+                        dict_similar_tokens[token[0]] = similar_tokens
+
+            recommend_welfare = dict()
+            for key, similar_keys in dict_similar_tokens.items():
+                list_recommend_welfare_index = WelIndex.objects.filter(indexName=key)
+                for recommend_welfare_index in list_recommend_welfare_index:
+                    welfare_count = recommend_welfare.get(recommend_welfare_index.welId)
+                    if welfare_count is None:
+                        recommend_welfare[recommend_welfare_index.welId] = 1
+                    else:
+                        recommend_welfare[recommend_welfare_index.welId] = welfare_count + 1
+
+                for similar_key in similar_keys:
+                    list_recommend_welfare_index = WelIndex.objects.filter(indexName=similar_key)
+                    for recommend_welfare_index in list_recommend_welfare_index:
+                        welfare_count = recommend_welfare.get(recommend_welfare_index.welId)
+                        if welfare_count is None:
+                            recommend_welfare[recommend_welfare_index.welId] = 1
+                        else:
+                            recommend_welfare[recommend_welfare_index.welId] = welfare_count + 1
+
+            recommend_welfares_sorted_by_count_desc = sorted(recommend_welfare, key=recommend_welfare.get, reverse=True)
+            recommend_welfare_dict = dict()
+            for recommend_welfare_sorted_by_count_desc in recommend_welfares_sorted_by_count_desc:
+                recommend_welfare_dict[recommend_welfare_sorted_by_count_desc] = recommend_welfare.get(
+                    recommend_welfare_sorted_by_count_desc)
+
+            return Response(recommend_welfare_dict)
+
+        return ListModelMixin.list(self, request, *args, **kwargs)
