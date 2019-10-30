@@ -225,10 +225,26 @@ class Responsible(models.Model):
 
 
 class Index(models.Model):
-    indexName = models.CharField(
+    indexId = models.AutoField(
         primary_key=True,
+        db_column='indexid'
+    )
+    indexName = models.CharField(
         max_length=255,
         db_column='indexname'
+    )
+    category = models.CharField(
+        max_length=100,
+        db_column='category'
+    )
+    weight = models.FloatField(
+        db_column='weight'
+    )
+    createColumn = models.DateTimeField(
+        db_column='create_column'
+    )
+    updateColumn = models.DateTimeField(
+        db_column='update_column'
     )
 
     class Meta:
@@ -524,10 +540,16 @@ class WelIndex(models.Model):
         on_delete=models.CASCADE,
         db_column='welid'
     )
-    indexName = models.ForeignKey(
+    indexId = models.ForeignKey(
         Index,
         on_delete=models.CASCADE,
-        db_column='indexname'
+        db_column='indexid'
+    )
+    createColumn = models.DateTimeField(
+        db_column='create_column'
+    )
+    updateColumn = models.DateTimeField(
+        db_column='update_column'
     )
 
     class Meta:
