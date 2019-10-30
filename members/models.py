@@ -396,3 +396,39 @@ class MemDisable(models.Model):
 
     class Meta:
         db_table = 'Memdisable'
+
+
+class Feedback(models.Model):
+    FeedbackId = models.AutoField(
+        primary_key=True,
+        db_column='feedback_id'
+    )
+    MemberEmail = models.CharField(
+        max_length=511,
+        db_column='member_email',
+        null=True
+    )
+    MemberKey = models.ForeignKey(
+        Member,
+        on_delete=models.CASCADE,
+        db_column='member_key',
+        db_constraint='fk_feedback_member_key',
+        null=True
+    )
+    MemberPhone = models.CharField(
+        max_length=30,
+        db_column='member_phone',
+        null=True
+    )
+    FeedbackContent = models.TextField(
+        db_column='feedback_content'
+    )
+    CreateColumn = models.DateTimeField(
+        db_column='create_column'
+    )
+    UpdateColumn = models.DateTimeField(
+        db_column='update_column'
+    )
+
+    class Meta:
+        db_table = 'Feedback'
