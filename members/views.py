@@ -11,9 +11,9 @@
 """
 
 from addresses.models import Address
-from members.models import Member, Job, MemDesire, MemLifeCycle, MemTargetCharacter, MemHouseType, MemWelfare
+from members.models import Member, Job, MemDesire, MemLifeCycle, MemTargetCharacter, MemHouseType, MemWelfare, Feedback
 from welfares.models import HouseType, Desire, TargetCharacter, LifeCycle, Disable, Welfare
-from members.serializers import MemberSerializer
+from members.serializers import MemberSerializer, FeedbackSerializer
 from hoxymetoo.key import aes_key
 from django.db import connection
 from django.db.models import Q
@@ -373,3 +373,8 @@ class MemberViewSet(viewsets.ModelViewSet):
                 """
 
         return query
+
+
+class FeedbackViewSet(viewsets.ModelViewSet):
+    queryset = Feedback.objects.all()
+    serializer_class = FeedbackSerializer

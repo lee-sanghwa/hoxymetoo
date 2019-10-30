@@ -11,7 +11,7 @@
 from rest_framework import serializers
 from django.db import connection
 from members.models import Member, Job, MemJob, MemDisable, MemWelfare, MemHouseType, MemDesire, MemTargetCharacter, \
-    MemLifeCycle, MemFamily, Family
+    MemLifeCycle, MemFamily, Family, Feedback
 from welfares.models import HouseType, Desire, TargetCharacter, LifeCycle, Disable, Welfare
 from hoxymetoo.key import aes_key
 
@@ -534,3 +534,9 @@ class MemberSerializer(serializers.ModelSerializer):
                     model_column_name: model_instance
                 }
                 model_associated_with_member.objects.create(**kwargs_associated_with_member)
+
+
+class FeedbackSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Feedback
+        fields = '__all__'

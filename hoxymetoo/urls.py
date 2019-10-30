@@ -29,7 +29,7 @@ from rest_framework import routers
 from hoxymetoo import settings
 from hoxymetoo.views import index
 from addresses.views import SiDoViewSet, SiGunGuViewSet, AddressViewSet
-from members.views import MemberViewSet
+from members.views import MemberViewSet, FeedbackViewSet
 from welfares.views import WelfareViewSet, IndexViewSet, WelfareIndexViewSet, create_disable_data_in_database, \
     DisableTypeViewSet, DisableLevelViewSet, DisableViewSet, HouseTypeViewSet, DesireViewSet, TargetCharacterViewSet, \
     LifeCycleViewSet
@@ -38,26 +38,27 @@ from chatbot.views import ChatBotViewSet
 from receivableMoney.views import MemberReceivableMoneyViewSet
 
 router = routers.DefaultRouter(trailing_slash=False)
+router.register('address', AddressViewSet, basename="address")
+router.register('answers', AnswerViewSet, basename="answers")
+router.register('categories', CategoryViewSet, basename="categories")
+router.register('chatlogs', ChatBotViewSet, basename="chatlogs")
+router.register('desires', DesireViewSet, basename="desires")
+router.register('disables', DisableViewSet, basename="disables")
+router.register('disablelevels', DisableLevelViewSet, basename="disablelevels")
+router.register('disabletypes', DisableTypeViewSet, basename="disabletypes")
+router.register('feedbacks', FeedbackViewSet, basename='feedbacks')
+router.register('housetypes', HouseTypeViewSet, basename="housetypes")
+router.register('indexes', IndexViewSet, basename="indexes")
+router.register('lifecycles', LifeCycleViewSet, basename="lifecycles")
+router.register('members', MemberViewSet, basename="members")
+router.register('qnas', QnaViewSet, basename="qnas")
+router.register('questions', QuestionViewSet, basename="questions")
+router.register('receivablemoney', MemberReceivableMoneyViewSet, basename="receivablemoney")
 router.register('sido', SiDoViewSet, basename="sido")
 router.register('sigungu', SiGunGuViewSet, basename="sigungu")
-router.register('address', AddressViewSet, basename="address")
-router.register('members', MemberViewSet, basename="members")
-router.register('welfares', WelfareViewSet, basename="welfares")
-router.register('indexes', IndexViewSet, basename="indexes")
-router.register('welindexes', WelfareIndexViewSet, basename="welindexes")
-router.register('disabletypes', DisableTypeViewSet, basename="disabletypes")
-router.register('disablelevels', DisableLevelViewSet, basename="disablelevels")
-router.register('disables', DisableViewSet, basename="disables")
-router.register('housetypes', HouseTypeViewSet, basename="housetypes")
-router.register('desires', DesireViewSet, basename="desires")
 router.register('targetcharacters', TargetCharacterViewSet, basename="targetcharacters")
-router.register('lifecycles', LifeCycleViewSet, basename="lifecycles")
-router.register('categories', CategoryViewSet, basename="categories")
-router.register('questions', QuestionViewSet, basename="questions")
-router.register('answers', AnswerViewSet, basename="answers")
-router.register('qnas', QnaViewSet, basename="qnas")
-router.register('chatlogs', ChatBotViewSet, basename="chatlogs")
-router.register('receivablemoney', MemberReceivableMoneyViewSet, basename="receivablemoney")
+router.register('welfares', WelfareViewSet, basename="welfares")
+router.register('welindexes', WelfareIndexViewSet, basename="welindexes")
 
 urlpatterns = [
     path('', index),
