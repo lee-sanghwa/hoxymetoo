@@ -11,7 +11,7 @@
 
 from chatbot.serializers import ChatLogSenderSerializer, ChatLogReceiverSerializer
 from chatbot.models import ChatLog
-from welfares.models import WelIndex
+from welfares.models import Index, WelIndex
 from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.mixins import CreateModelMixin, ListModelMixin
@@ -85,40 +85,56 @@ class ChatBotViewSet(viewsets.ModelViewSet):
             model = Word2Vec.load(f'{sys.path[0]}/chatbot/word2vec.model')
 
             dict_similar_tokens = dict()
+            # 일치율이 높은 3개의 단어만 추출
+            n = 3
+            # 총 3개 이상의 인덱스가 겹치는 복지의 경우만 반환
+            total_count = 3
             for token in token_list:
                 if token[1] in ['Noun']:
+                    # 사용자의 질문자체를 이용한 유사한 단어 추출
                     try:
                         similar_tokens = model.wv.most_similar(token[0])
+                    # 모델에 있지않은 단어의 경우 그냥 계속 작동
                     except KeyError:
                         continue
+                    # 사용자의 질문자체에서 뽑힌 단어중 일치율이 높은 n개의 단어만 추출
                     if similar_tokens:
-                        dict_similar_tokens[token[0]] = similar_tokens
+                        dict_similar_tokens[token[0]] = similar_tokens[:n]
 
             recommend_welfare = dict()
+            # ('육아', ('도우미', 0.7666430473327637))
             for key, similar_keys in dict_similar_tokens.items():
-                list_recommend_welfare_index = WelIndex.objects.filter(indexName=key)
+                # 사용자의 질문자체의 Noun에 대한 index정보 획득
+                recommend_index = Index.objects.get(indexName=key)
+                # 사용자의 질문자체의 Noun에 대한 index를 갖는 복지들 획득
+                list_recommend_welfare_index = WelIndex.objects.filter(indexId=recommend_index)
                 for recommend_welfare_index in list_recommend_welfare_index:
-                    welfare_count = recommend_welfare.get(recommend_welfare_index.welId)
+                    welfare_count = recommend_welfare.get(recommend_welfare_index.welId.welId)
                     if welfare_count is None:
-                        recommend_welfare[recommend_welfare_index.welId] = 1
+                        recommend_welfare[recommend_welfare_index.welId.welId] = 1
                     else:
-                        recommend_welfare[recommend_welfare_index.welId] = welfare_count + 1
+                        recommend_welfare[recommend_welfare_index.welId.welId] = welfare_count + 1
 
                 for similar_key in similar_keys:
-                    list_recommend_welfare_index = WelIndex.objects.filter(indexName=similar_key)
+                    recommend_index = Index.objects.get(indexName=similar_key[0])
+                    list_recommend_welfare_index = WelIndex.objects.filter(indexId=recommend_index)
                     for recommend_welfare_index in list_recommend_welfare_index:
-                        welfare_count = recommend_welfare.get(recommend_welfare_index.welId)
+                        welfare_count = recommend_welfare.get(recommend_welfare_index.welId.welId)
                         if welfare_count is None:
-                            recommend_welfare[recommend_welfare_index.welId] = 1
+                            recommend_welfare[recommend_welfare_index.welId.welId] = 1
                         else:
-                            recommend_welfare[recommend_welfare_index.welId] = welfare_count + 1
+                            recommend_welfare[recommend_welfare_index.welId.welId] = welfare_count + 1
 
             recommend_welfares_sorted_by_count_desc = sorted(recommend_welfare, key=recommend_welfare.get, reverse=True)
             recommend_welfare_dict = dict()
             for recommend_welfare_sorted_by_count_desc in recommend_welfares_sorted_by_count_desc:
-                recommend_welfare_dict[recommend_welfare_sorted_by_count_desc] = recommend_welfare.get(
-                    recommend_welfare_sorted_by_count_desc)
+                if recommend_welfare.get(recommend_welfare_sorted_by_count_desc) >= total_count:
+                    recommend_welfare_dict[recommend_welfare_sorted_by_count_desc] = recommend_welfare.get(
+                        recommend_welfare_sorted_by_count_desc)
 
+            recommend_welfare_dict['chat tokenize'] = token_list
+            for chat_token, similar_chat_token in dict_similar_tokens.items():
+                recommend_welfare_dict[chat_token] = similar_chat_token
             return Response(recommend_welfare_dict)
 
         return ListModelMixin.list(self, request, *args, **kwargs)
