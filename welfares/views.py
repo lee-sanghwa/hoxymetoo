@@ -105,6 +105,7 @@ class WelfareViewSet(viewsets.ModelViewSet):
         target_character = query_dict.get('targetCharacter')
         life_cycle = query_dict.get('lifeCycle')
         responsible = query_dict.get('responsible')
+        welfare_address_id = query_dict.get('welAddressId')
         search = query_dict.get('search')
         offset = query_dict.get('offset')
 
@@ -120,6 +121,8 @@ class WelfareViewSet(viewsets.ModelViewSet):
             existing_queryset = existing_queryset.filter(lifeCycles__lifeCycleId=life_cycle)
         if responsible is not None:
             existing_queryset = existing_queryset.filter(responsibles_responsibleId=responsible)
+        if welfare_address_id is not None:
+            existing_queryset = existing_queryset.filter(welAddressId__addressId=welfare_address_id)
 
         if offset is not None:
             pagination_class.page_size = offset
