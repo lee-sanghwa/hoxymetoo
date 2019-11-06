@@ -36,7 +36,7 @@ class MemberViewSet(viewsets.ModelViewSet):
 
     # HTTP METHOD의 POST
     def create(self, request, *args, **kwargs):
-        logger.info("TRY CREATE MEMBER  ||" + create_log_content(request))
+        logger.info("TRY CREATE MEMBER" + create_log_content(request))
 
         # Django 에서는 request의 body로 들어온 정보를 변환하지 못하도록 막았기 때문에 이를 풀어줌
         mutable = request.POST._mutable
@@ -73,7 +73,7 @@ class MemberViewSet(viewsets.ModelViewSet):
                 LifeCycle.objects.get(lifeCycleId=life_cycle)
         except Job.DoesNotExist or Disable.DoesNotExist or Welfare.DoesNotExist or HouseType.DoesNotExist or \
                Desire.DoesNotExist or TargetCharacter.DoesNotExist or LifeCycle.DoesNotExist:
-            logger.error("ERROR with field associated with CREATE MEMBER  ||" + create_log_content(request))
+            logger.error("ERROR with field associated with CREATE MEMBER" + create_log_content(request))
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
         # 필드 중 생성 날짜. 시간들에 대한 정보를 클라이언트가 아닌 서버에서 생성
@@ -117,7 +117,7 @@ class MemberViewSet(viewsets.ModelViewSet):
 
     # HTTP METHOD의 PATCH
     def update(self, request, *args, **kwargs):
-        logger.info("TRY UPDATE MEMBER  ||" + create_log_content(request))
+        logger.info("TRY UPDATE MEMBER" + create_log_content(request))
 
         # Django 에서는 request의 body로 들어온 정보를 변환하지 못하도록 막았기 때문에 이를 풀어줌
         mutable = request.POST._mutable
@@ -154,7 +154,7 @@ class MemberViewSet(viewsets.ModelViewSet):
                 LifeCycle.objects.get(lifeCycleId=life_cycle)
         except Job.DoesNotExist or Disable.DoesNotExist or Welfare.DoesNotExist or HouseType.DoesNotExist or \
                Desire.DoesNotExist or TargetCharacter.DoesNotExist or LifeCycle.DoesNotExist:
-            logger.error("ERROR with field associated with UPDATE MEMBER  ||" + create_log_content(request))
+            logger.error("ERROR with field associated with UPDATE MEMBER" + create_log_content(request))
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
         # 필드 중 생성 날짜. 시간들에 대한 정보를 클라이언트가 아닌 서버에서 생성
@@ -197,7 +197,7 @@ class MemberViewSet(viewsets.ModelViewSet):
         return Response(decrypt_member_data)
 
     def list(self, request, *args, **kwargs):
-        logger.info("TRY LIST MEMBER  ||" + create_log_content(request))
+        logger.info("TRY LIST MEMBER" + create_log_content(request))
 
         new_queryset = Member.objects.all()
         # 보안성을 위해 배포시에 주석 해제
@@ -223,7 +223,7 @@ class MemberViewSet(viewsets.ModelViewSet):
         return ListModelMixin.list(self, request, *args, **kwargs)
 
     def retrieve(self, request, *args, **kwargs):
-        logger.info("TRY RETRIEVE MEMBER | " + create_log_content(request))
+        logger.info("TRY RETRIEVE MEMBER" + create_log_content(request))
 
         instance = self.get_object()
         serializer = self.get_serializer(instance)

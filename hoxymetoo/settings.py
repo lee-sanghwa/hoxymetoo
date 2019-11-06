@@ -151,8 +151,7 @@ LOGGING = {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
             'formatter': 'common_format',
-            'filename': f'{os.fspath(BASE_DIR)}/{today_date}_debug.log',
-            # 'filename': '/home/webserver/debug.log',
+            'filename': f'{os.fspath(BASE_DIR)}/{today_date}_debug.log'
         },
     },
     'loggers': {
@@ -160,7 +159,23 @@ LOGGING = {
             'handlers': ['file'],
             'level': 'INFO',
         },
+        'addresses': {
+            'handlers': ['file'],
+            'level': 'DEBUG',
+        },
+        'chatbot': {
+            'handlers': ['file'],
+            'level': 'DEBUG',
+        },
         'members': {
+            'handlers': ['file'],
+            'level': 'DEBUG',
+        },
+        'receivableMoney': {
+            'handlers': ['file'],
+            'level': 'DEBUG',
+        },
+        'welfares': {
             'handlers': ['file'],
             'level': 'DEBUG',
         },
