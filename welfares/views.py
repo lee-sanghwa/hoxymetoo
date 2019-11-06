@@ -14,12 +14,16 @@ from welfares.models import Welfare, DisableType, DisableLevel, Disable, HouseTy
 from welfares.serializers import WelfareSerializer, IndexSerializer, WelfareIndexSerializer, DisableSerializer, \
     DisableTypeSerializer, DisableLevelSerializer, HouseTypeSerializer, DesireSerializer, TargetCharacterSerializer, \
     LifeCycleSerializer
+from hoxymetoo.create_log import create_log_content
 from django.db.models import Q
 from rest_framework import viewsets, status
 from rest_framework.decorators import api_view
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.mixins import CreateModelMixin, UpdateModelMixin, ListModelMixin
 from rest_framework.response import Response
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class WelfareViewSet(viewsets.ModelViewSet):
@@ -28,6 +32,7 @@ class WelfareViewSet(viewsets.ModelViewSet):
 
     # HTTP METHOD의 POST
     def create(self, request, *args, **kwargs):
+        logger.info("TRY CREATE WELFARE  ||" + create_log_content(request))
         welfare_data = request.data
 
         disables = welfare_data.get('disables', [])
@@ -59,6 +64,7 @@ class WelfareViewSet(viewsets.ModelViewSet):
 
     # HTTP METHOD의 PATCH
     def update(self, request, *args, **kwargs):
+        logger.info("TRY UPDATE WELFARE  ||" + create_log_content(request))
         welfare_data = request.data
 
         disables = welfare_data.get('disables')
@@ -95,6 +101,7 @@ class WelfareViewSet(viewsets.ModelViewSet):
         return UpdateModelMixin.partial_update(self, request, *args, **kwargs)
 
     def list(self, request, *args, **kwargs):
+        logger.info("TRY LIST WELFARE  ||" + create_log_content(request))
         existing_queryset = self.queryset
         query_dict = request.GET
         pagination_class = PageNumberPagination
@@ -137,50 +144,198 @@ class WelfareViewSet(viewsets.ModelViewSet):
 
         return ListModelMixin.list(self, request, *args, **kwargs)
 
+    def retrieve(self, request, *args, **kwargs):
+        logger.info("TRY RETRIEVE WELFARE  ||" + create_log_content(request))
+        return super().retrieve(self, request, *args, **kwargs)
+
 
 class IndexViewSet(viewsets.ModelViewSet):
     queryset = Index.objects.all()
     serializer_class = IndexSerializer
+
+    def list(self, request, *args, **kwargs):
+        logger.info("TRY LIST INDEX  ||" + create_log_content(request))
+        return super().list(self, request, *args, **kwargs)
+
+    def create(self, request, *args, **kwargs):
+        logger.info("TRY CREATE INDEX  ||" + create_log_content(request))
+        return super().create(self, request, *args, **kwargs)
+
+    def retrieve(self, request, *args, **kwargs):
+        logger.info("TRY RETRIEVE INDEX  ||" + create_log_content(request))
+        return super().retrieve(self, request, *args, **kwargs)
+
+    def update(self, request, *args, **kwargs):
+        logger.info("TRY UPDATE INDEX  ||" + create_log_content(request))
+        return super().update(self, request, *args, **kwargs)
 
 
 class WelfareIndexViewSet(viewsets.ModelViewSet):
     queryset = WelIndex.objects.all()
     serializer_class = WelfareIndexSerializer
 
+    def list(self, request, *args, **kwargs):
+        logger.info("TRY LIST WELFAREINDEX  ||" + create_log_content(request))
+        return super().list(self, request, *args, **kwargs)
+
+    def create(self, request, *args, **kwargs):
+        logger.info("TRY CREATE WELFAREINDEX  ||" + create_log_content(request))
+        return super().create(self, request, *args, **kwargs)
+
+    def retrieve(self, request, *args, **kwargs):
+        logger.info("TRY RETRIEVE WELFAREINDEX  ||" + create_log_content(request))
+        return super().retrieve(self, request, *args, **kwargs)
+
+    def update(self, request, *args, **kwargs):
+        logger.info("TRY UPDATE WELFAREINDEX  ||" + create_log_content(request))
+        return super().update(self, request, *args, **kwargs)
+
 
 class DisableTypeViewSet(viewsets.ModelViewSet):
     queryset = DisableType.objects.all()
     serializer_class = DisableTypeSerializer
+
+    def list(self, request, *args, **kwargs):
+        logger.info("TRY LIST DISABLE TYPE  ||" + create_log_content(request))
+        return super().list(self, request, *args, **kwargs)
+
+    def create(self, request, *args, **kwargs):
+        logger.info("TRY CREATE DISABLE TYPE  ||" + create_log_content(request))
+        return super().create(self, request, *args, **kwargs)
+
+    def retrieve(self, request, *args, **kwargs):
+        logger.info("TRY RETRIEVE DISABLE TYPE  ||" + create_log_content(request))
+        return super().retrieve(self, request, *args, **kwargs)
+
+    def update(self, request, *args, **kwargs):
+        logger.info("TRY UPDATE DISABLE TYPE  ||" + create_log_content(request))
+        return super().update(self, request, *args, **kwargs)
 
 
 class DisableLevelViewSet(viewsets.ModelViewSet):
     queryset = DisableLevel.objects.all()
     serializer_class = DisableLevelSerializer
 
+    def list(self, request, *args, **kwargs):
+        logger.info("TRY LIST DISABLE LEVEL  ||" + create_log_content(request))
+        return super().list(self, request, *args, **kwargs)
+
+    def create(self, request, *args, **kwargs):
+        logger.info("TRY CREATE DISABLE LEVEL  ||" + create_log_content(request))
+        return super().create(self, request, *args, **kwargs)
+
+    def retrieve(self, request, *args, **kwargs):
+        logger.info("TRY RETRIEVE DISABLE LEVEL  ||" + create_log_content(request))
+        return super().retrieve(self, request, *args, **kwargs)
+
+    def update(self, request, *args, **kwargs):
+        logger.info("TRY UPDATE DISABLE LEVEL  ||" + create_log_content(request))
+        return super().update(self, request, *args, **kwargs)
+
 
 class DisableViewSet(viewsets.ModelViewSet):
     queryset = Disable.objects.all()
     serializer_class = DisableSerializer
+
+    def list(self, request, *args, **kwargs):
+        logger.info("TRY LIST DISABLE  ||" + create_log_content(request))
+        return super().list(self, request, *args, **kwargs)
+
+    def create(self, request, *args, **kwargs):
+        logger.info("TRY CREATE DISABLE  ||" + create_log_content(request))
+        return super().create(self, request, *args, **kwargs)
+
+    def retrieve(self, request, *args, **kwargs):
+        logger.info("TRY RETRIEVE DISABLE  ||" + create_log_content(request))
+        return super().retrieve(self, request, *args, **kwargs)
+
+    def update(self, request, *args, **kwargs):
+        logger.info("TRY UPDATE DISABLE  ||" + create_log_content(request))
+        return super().update(self, request, *args, **kwargs)
 
 
 class HouseTypeViewSet(viewsets.ModelViewSet):
     queryset = HouseType.objects.all()
     serializer_class = HouseTypeSerializer
 
+    def list(self, request, *args, **kwargs):
+        logger.info("TRY LIST HOUSE TYPE  ||" + create_log_content(request))
+        return super().list(self, request, *args, **kwargs)
+
+    def create(self, request, *args, **kwargs):
+        logger.info("TRY CREATE HOUSE TYPE  ||" + create_log_content(request))
+        return super().create(self, request, *args, **kwargs)
+
+    def retrieve(self, request, *args, **kwargs):
+        logger.info("TRY RETRIEVE HOUSE TYPE  ||" + create_log_content(request))
+        return super().retrieve(self, request, *args, **kwargs)
+
+    def update(self, request, *args, **kwargs):
+        logger.info("TRY UPDATE HOUSE TYPE  ||" + create_log_content(request))
+        return super().update(self, request, *args, **kwargs)
+
 
 class DesireViewSet(viewsets.ModelViewSet):
     queryset = Desire.objects.all()
     serializer_class = DesireSerializer
+
+    def list(self, request, *args, **kwargs):
+        logger.info("TRY LIST DESIRE  ||" + create_log_content(request))
+        return super().list(self, request, *args, **kwargs)
+
+    def create(self, request, *args, **kwargs):
+        logger.info("TRY CREATE DESIRE  ||" + create_log_content(request))
+        return super().create(self, request, *args, **kwargs)
+
+    def retrieve(self, request, *args, **kwargs):
+        logger.info("TRY RETRIEVE DESIRE  ||" + create_log_content(request))
+        return super().retrieve(self, request, *args, **kwargs)
+
+    def update(self, request, *args, **kwargs):
+        logger.info("TRY UPDATE DESIRE  ||" + create_log_content(request))
+        return super().update(self, request, *args, **kwargs)
 
 
 class TargetCharacterViewSet(viewsets.ModelViewSet):
     queryset = TargetCharacter.objects.all()
     serializer_class = TargetCharacterSerializer
 
+    def list(self, request, *args, **kwargs):
+        logger.info("TRY LIST TARGET CHARACTER  ||" + create_log_content(request))
+        return super().list(self, request, *args, **kwargs)
+
+    def create(self, request, *args, **kwargs):
+        logger.info("TRY CREATE TARGET CHARACTER  ||" + create_log_content(request))
+        return super().create(self, request, *args, **kwargs)
+
+    def retrieve(self, request, *args, **kwargs):
+        logger.info("TRY RETRIEVE TARGET CHARACTER  ||" + create_log_content(request))
+        return super().retrieve(self, request, *args, **kwargs)
+
+    def update(self, request, *args, **kwargs):
+        logger.info("TRY UPDATE TARGET CHARACTER  ||" + create_log_content(request))
+        return super().update(self, request, *args, **kwargs)
+
 
 class LifeCycleViewSet(viewsets.ModelViewSet):
     queryset = LifeCycle.objects.all()
     serializer_class = LifeCycleSerializer
+
+    def list(self, request, *args, **kwargs):
+        logger.info("TRY LIST LIFE CYCLE  ||" + create_log_content(request))
+        return super().list(self, request, *args, **kwargs)
+
+    def create(self, request, *args, **kwargs):
+        logger.info("TRY CREATE LIFE CYCLE  ||" + create_log_content(request))
+        return super().create(self, request, *args, **kwargs)
+
+    def retrieve(self, request, *args, **kwargs):
+        logger.info("TRY RETRIEVE LIFE CYCLE  ||" + create_log_content(request))
+        return super().retrieve(self, request, *args, **kwargs)
+
+    def update(self, request, *args, **kwargs):
+        logger.info("TRY UPDATE LIFE CYCLE  ||" + create_log_content(request))
+        return super().update(self, request, *args, **kwargs)
 
 
 @api_view()

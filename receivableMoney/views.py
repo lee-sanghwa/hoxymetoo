@@ -10,9 +10,29 @@
 
 from receivableMoney.serializers import MemberReceivableMoneySerializer
 from receivableMoney.models import MemberReceivableMoney
+from hoxymetoo.create_log import create_log_content
 from rest_framework import viewsets
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class MemberReceivableMoneyViewSet(viewsets.ModelViewSet):
     queryset = MemberReceivableMoney.objects.all()
     serializer_class = MemberReceivableMoneySerializer
+
+    def list(self, request, *args, **kwargs):
+        logger.info("TRY LIST SI DO  ||" + create_log_content(request))
+        return super().list(self, request, *args, **kwargs)
+
+    def create(self, request, *args, **kwargs):
+        logger.info("TRY CREATE SI DO  ||" + create_log_content(request))
+        return super().create(self, request, *args, **kwargs)
+
+    def retrieve(self, request, *args, **kwargs):
+        logger.info("TRY RETRIEVE SI DO  ||" + create_log_content(request))
+        return super().retrieve(self, request, *args, **kwargs)
+
+    def update(self, request, *args, **kwargs):
+        logger.info("TRY UPDATE SI DO  ||" + create_log_content(request))
+        return super().update(self, request, *args, **kwargs)

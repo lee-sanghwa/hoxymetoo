@@ -12,10 +12,14 @@
 from chatbot.serializers import ChatLogSenderSerializer, ChatLogReceiverSerializer
 from chatbot.models import ChatLog
 from welfares.models import Index, WelIndex
+from hoxymetoo.create_log import create_log_content
 from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.mixins import CreateModelMixin, ListModelMixin
 from datetime import datetime
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class ChatBotViewSet(viewsets.ModelViewSet):
@@ -26,6 +30,7 @@ class ChatBotViewSet(viewsets.ModelViewSet):
 
     # HTTP METHOD의 POST
     def create(self, request, *args, **kwargs):
+        logger.info("TRY CREATE CHATBOT  ||" + create_log_content(request))
         # Django 에서는 request의 body로 들어온 정보를 변환하지 못하도록 막았기 때문에 이를 풀어줌
         mutable = request.POST._mutable
         request.POST._mutable = True
@@ -56,6 +61,7 @@ class ChatBotViewSet(viewsets.ModelViewSet):
         return CreateModelMixin.create(self, request, *args, **kwargs)
 
     def list(self, request, *args, **kwargs):
+        logger.info("TRY LIST CHATBOT  ||" + create_log_content(request))
         chat_data = request.GET
 
         receiver_member_key = chat_data.get('receiverMemKey', None)

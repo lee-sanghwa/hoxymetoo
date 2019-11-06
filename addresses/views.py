@@ -1,12 +1,32 @@
 from addresses.models import SiDo, SiGunGu, Address
 from addresses.serializers import SiDoSerializer, SiGunGuSerializer, AddressSerializer
+from hoxymetoo.create_log import create_log_content
 from rest_framework.mixins import ListModelMixin
 from rest_framework import viewsets
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class SiDoViewSet(viewsets.ModelViewSet):
     queryset = SiDo.objects.all()
     serializer_class = SiDoSerializer
+
+    def list(self, request, *args, **kwargs):
+        logger.info("TRY LIST SI DO  ||" + create_log_content(request))
+        return super().list(self, request, *args, **kwargs)
+
+    def create(self, request, *args, **kwargs):
+        logger.info("TRY CREATE SI DO  ||" + create_log_content(request))
+        return super().create(self, request, *args, **kwargs)
+
+    def retrieve(self, request, *args, **kwargs):
+        logger.info("TRY RETRIEVE SI DO  ||" + create_log_content(request))
+        return super().retrieve(self, request, *args, **kwargs)
+
+    def update(self, request, *args, **kwargs):
+        logger.info("TRY UPDATE SI DO  ||" + create_log_content(request))
+        return super().update(self, request, *args, **kwargs)
 
 
 class SiGunGuViewSet(viewsets.ModelViewSet):
@@ -14,6 +34,7 @@ class SiGunGuViewSet(viewsets.ModelViewSet):
     serializer_class = SiGunGuSerializer
 
     def list(self, request, *args, **kwargs):
+        logger.info("TRY LIST SI GUN GU  ||" + create_log_content(request))
         existing_queryset = self.queryset
         query_dict = request.GET
 
@@ -34,7 +55,35 @@ class SiGunGuViewSet(viewsets.ModelViewSet):
 
         return ListModelMixin.list(self, request, *args, **kwargs)
 
+    def create(self, request, *args, **kwargs):
+        logger.info("TRY CREATE SI GUN GU  ||" + create_log_content(request))
+        return super().create(self, request, *args, **kwargs)
+
+    def retrieve(self, request, *args, **kwargs):
+        logger.info("TRY RETRIEVE SI GUN GU  ||" + create_log_content(request))
+        return super().retrieve(self, request, *args, **kwargs)
+
+    def update(self, request, *args, **kwargs):
+        logger.info("TRY UPDATE SI GUN GU  ||" + create_log_content(request))
+        return super().update(self, request, *args, **kwargs)
+
 
 class AddressViewSet(viewsets.ModelViewSet):
     queryset = Address.objects.all()
     serializer_class = AddressSerializer
+
+    def list(self, request, *args, **kwargs):
+        logger.info("TRY LIST ADDRESS  ||" + create_log_content(request))
+        return super().list(self, request, *args, **kwargs)
+
+    def create(self, request, *args, **kwargs):
+        logger.info("TRY CREATE ADDRESS  ||" + create_log_content(request))
+        return super().create(self, request, *args, **kwargs)
+
+    def retrieve(self, request, *args, **kwargs):
+        logger.info("TRY RETRIEVE ADDRESS  ||" + create_log_content(request))
+        return super().retrieve(self, request, *args, **kwargs)
+
+    def update(self, request, *args, **kwargs):
+        logger.info("TRY UPDATE ADDRESS  ||" + create_log_content(request))
+        return super().update(self, request, *args, **kwargs)
