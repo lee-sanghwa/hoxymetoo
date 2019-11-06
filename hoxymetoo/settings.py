@@ -9,6 +9,7 @@
 """
 
 import os
+from datetime import datetime
 from hoxymetoo.key import mysql_conf
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -136,6 +137,7 @@ STATICFILES_DIRS = [
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
+today_date = datetime.now().strftime("%Y-%m-%d")
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -149,7 +151,7 @@ LOGGING = {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
             'formatter': 'common_format',
-            'filename': '/Users/leesanghwa/PycharmProjects/hoxymetoo/debug.log',
+            'filename': f'{os.fspath(BASE_DIR)}_{today_date}_debug.log',
             # 'filename': '/home/webserver/debug.log',
         },
     },
