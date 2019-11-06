@@ -27,7 +27,7 @@ from django.contrib import admin
 from django.urls import include, path
 from rest_framework import routers
 from hoxymetoo import settings
-from hoxymetoo.views import index
+from hoxymetoo.views import index, privacy_law
 from addresses.views import SiDoViewSet, SiGunGuViewSet, AddressViewSet
 from members.views import MemberViewSet, FeedbackViewSet
 from welfares.views import WelfareViewSet, IndexViewSet, WelfareIndexViewSet, create_disable_data_in_database, \
@@ -62,6 +62,7 @@ router.register('welindexes', WelfareIndexViewSet, basename="welindexes")
 
 urlpatterns = [
     path('', index),
+    path('ko/privacy/', privacy_law),
     path('admin/', admin.site.urls),
     path('api/', include(router.urls)),
     path('create-disable/', create_disable_data_in_database)
