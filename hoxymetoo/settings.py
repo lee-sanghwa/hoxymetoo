@@ -151,7 +151,7 @@ LOGGING = {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
             'formatter': 'common_format',
-            'filename': f'{os.fspath(BASE_DIR)}_{today_date}_debug.log',
+            'filename': f'{os.fspath(BASE_DIR)}/{today_date}_debug.log',
             # 'filename': '/home/webserver/debug.log',
         },
     },
