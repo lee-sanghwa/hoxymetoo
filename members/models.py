@@ -33,7 +33,7 @@ class Family(models.Model):
         max_length=20,
         db_column='familyinfo'
     )
-    familyAddressId = models.OneToOneField(
+    familyAddressId = models.ForeignKey(
         Address,
         null=True,
         on_delete=models.CASCADE,
