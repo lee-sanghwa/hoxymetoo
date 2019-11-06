@@ -135,7 +135,7 @@ class Member(models.Model):
         null=True,
         db_column='st_bohun'
     )
-    memAddressId = models.ForeignObject(
+    memAddressId = models.ForeignKey(
         Address,
         null=True,
         on_delete=models.CASCADE,
