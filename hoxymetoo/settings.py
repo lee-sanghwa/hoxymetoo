@@ -150,9 +150,8 @@ LOGGING = {
     'handlers': {
         'http': {
             'level': 'DEBUG',
-            'class': 'logging.FileHandler',
-            'formatter': 'common_format',
-            'filename': f'{os.fspath(BASE_DIR)}/{today_date}_debug2.log'
+            'class': 'logging.handlers.HTTPHandler',
+            'formatter': 'common_format'
         },
         'file': {
             'level': 'DEBUG',
