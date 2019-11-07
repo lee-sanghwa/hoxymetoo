@@ -150,16 +150,16 @@ LOGGING = {
     'handlers': {
         'http': {
             'level': 'DEBUG',
-            'class': 'logging.handlers.HTTPHandler',
+            'class': 'logging.StreamHandler',
             'formatter': 'common_format',
-            'filename': f'{os.fspath(BASE_DIR)}/{today_date}_debug2.log'
+            'filename': f'{os.fspath(BASE_DIR)}/{today_date}_debug.log'
         },
         'file': {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
             'formatter': 'common_format',
             'filename': f'{os.fspath(BASE_DIR)}/{today_date}_debug.log'
-        },
+        }
     },
     'loggers': {
         'django': {
