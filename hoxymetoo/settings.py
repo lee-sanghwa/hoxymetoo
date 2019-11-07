@@ -150,7 +150,7 @@ LOGGING = {
     'handlers': {
         'http': {
             'level': 'DEBUG',
-            'class': 'logging.StreamHandler',
+            'class': 'logging.handlers.HTTPHandler',
             'formatter': 'common_format'
         },
         'file': {
@@ -162,7 +162,7 @@ LOGGING = {
     },
     'loggers': {
         'django': {
-            'handlers': ['http'],
+            'handlers': ['http', 'file'],
             'level': 'DEBUG',
         },
         'addresses': {
