@@ -9,6 +9,7 @@
 """
 
 import os
+from logging.handlers import BaseRotatingHandler
 from datetime import datetime
 from hoxymetoo.key import mysql_conf
 
@@ -147,6 +148,12 @@ LOGGING = {
         },
     },
     'handlers': {
+        'django_request': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.HTTPHandler',
+            'formatter': 'common_format',
+            'filename': f'{os.fspath(BASE_DIR)}/{today_date}_debug.log'
+        },
         'file': {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
@@ -156,8 +163,8 @@ LOGGING = {
     },
     'loggers': {
         'django': {
-            'handlers': ['file'],
-            'level': 'INFO',
+            'handlers': ['django_request'],
+            'level': 'DEBUG',
         },
         'addresses': {
             'handlers': ['file'],
