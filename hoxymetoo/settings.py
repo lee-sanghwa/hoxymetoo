@@ -9,9 +9,19 @@
 """
 
 import os
-from logging.handlers import BaseRotatingHandler
+from logging import Handler
 from datetime import datetime
 from hoxymetoo.key import mysql_conf
+
+
+class HttpHandler(Handler):
+    def emit(self, record):
+        request = record.args[0]
+        record.ip = request.META.get('HTTP_X_FORWARDED_FOR')
+        record.args = None
+
+        return super(HttpHandler, self).emit(record)
+
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -144,15 +154,10 @@ LOGGING = {
     'disable_existing_loggers': False,
     'formatters': {
         'common_format': {
-            'format': '[%(asctime)s] %(levelname)s [%(name)s:%(lineno)s] %(message)s',
+            'format': '[%(asctime)s] %(levelname)s [%(name)s:%(lineno)s] %(ip)s  %(message)s',
         },
     },
     'handlers': {
-        'http': {
-            'level': 'DEBUG',
-            'class': 'logging.handlers.HTTPHandler',
-            'formatter': 'common_format'
-        },
         'file': {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
@@ -162,7 +167,7 @@ LOGGING = {
     },
     'loggers': {
         'django': {
-            'handlers': ['http', 'file'],
+            'handlers': ['file'],
             'level': 'DEBUG',
         },
         'addresses': {
