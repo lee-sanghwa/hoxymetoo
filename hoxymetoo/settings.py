@@ -148,11 +148,11 @@ LOGGING = {
         },
     },
     'handlers': {
-        'django_request': {
+        'http': {
             'level': 'DEBUG',
             'class': 'logging.handlers.HTTPHandler',
             'formatter': 'common_format',
-            'filename': f'{os.fspath(BASE_DIR)}/{today_date}_debug.log'
+            'filename': f'{os.fspath(BASE_DIR)}/{today_date}_debug2.log'
         },
         'file': {
             'level': 'DEBUG',
@@ -163,7 +163,7 @@ LOGGING = {
     },
     'loggers': {
         'django': {
-            'handlers': ['django_request'],
+            'handlers': ['http'],
             'level': 'DEBUG',
         },
         'addresses': {
