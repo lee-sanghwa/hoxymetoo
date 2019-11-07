@@ -150,7 +150,7 @@ LOGGING = {
     'handlers': {
         'http': {
             'level': 'DEBUG',
-            'class': 'logging.handlers.HTTPHandler',
+            'class': 'logging.StreamHandler',
             'formatter': 'common_format'
         },
         'file': {
