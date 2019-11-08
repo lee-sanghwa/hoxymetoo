@@ -1,4 +1,21 @@
-import json
+import json, os, logging
+from datetime import datetime
+
+
+class HttpHandler(logging.Handler):
+    today_date = datetime.now().strftime("%Y-%m-%d")
+
+    def emit(self, record):
+        try:
+            request = record.request
+            record.ip = request.META.get('HTTP_X_FORWARDED_FOR')
+            record.test = 'test'
+            f = open(
+                f'{os.fspath(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))}/{self.today_date}_debug.log',
+                'a')
+            f.write(f'[ {record.ip} ] ')
+        except Exception:
+            pass
 
 
 def create_log_content(request):
