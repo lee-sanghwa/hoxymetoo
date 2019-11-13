@@ -47,7 +47,9 @@ class ChatBotViewSet(viewsets.ModelViewSet):
             now_date_time.minute,
             now_date_time.second
         )
+        # 20191123 => 2019년 11월 23
         create_date = create_date_time[:8]
+        # 193043일 => 19시 30분 43초
         create_time = create_date_time[8:]
 
         chat_log_data['createDateTime'] = create_date_time
@@ -68,25 +70,34 @@ class ChatBotViewSet(viewsets.ModelViewSet):
         sender_member_key = chat_data.get('senderMemKey', None)
         search = chat_data.get('search', None)
 
+        # queryset과 serializer_class를 재지정 시작
+
+        # 챗봇을 보낸 사람을 기준으로 list를 호출할 때,
         if receiver_member_key is None and sender_member_key is not None:
             new_queryset = ChatLog.objects.filter(senderMemKey__memKey=sender_member_key)
             new_serializer_class = ChatLogSenderSerializer
             self.queryset = new_queryset
             self.serializer_class = new_serializer_class
+        # 챗봇을 받은 사람을 기준으로 list를 호출할 때,
         elif receiver_member_key is not None and sender_member_key is None:
             new_queryset = ChatLog.objects.filter(receiverMemKey__memKey=receiver_member_key)
             new_serializer_class = ChatLogReceiverSerializer
             self.queryset = new_queryset
             self.serializer_class = new_serializer_class
 
+        # queryset과 serializer_class를 재지정 끝
+
+        # search로 파라미터를 받았을 때는 토큰화를 통해 word2vec을 이용하여 복지 검색
         if search is not None:
             from gensim.models import Word2Vec
             from konlpy.tag import Okt
             import sys
 
+            # tagger class를 Okt를 이
             okt = Okt()
 
-            token_list = okt.pos(phrase=search, stem=True, norm=True)  # 단어 토큰화
+            # 단어 토큰화
+            token_list = okt.pos(phrase=search, stem=True, norm=True)
 
             model = Word2Vec.load(f'{sys.path[0]}/chatbot/word2vec.model')
 
@@ -116,31 +127,47 @@ class ChatBotViewSet(viewsets.ModelViewSet):
                 list_recommend_welfare_index = WelIndex.objects.filter(indexId=recommend_index)
                 for recommend_welfare_index in list_recommend_welfare_index:
                     welfare_count = recommend_welfare.get(recommend_welfare_index.welId.welId)
+                    # 처음 검색된 복지일 때, 카운트 = 1
                     if welfare_count is None:
                         recommend_welfare[recommend_welfare_index.welId.welId] = 1
+                    # 이미 찾아진 복지일 떄, 카운트 += 1
                     else:
                         recommend_welfare[recommend_welfare_index.welId.welId] = welfare_count + 1
 
+                # 사용자의 질문과 일치율이 높은 단어들에 대해서
                 for similar_key in similar_keys:
+                    # 일치율이 높은 단어에 대한 index정보 획득
                     recommend_index = Index.objects.get(indexName=similar_key[0])
+                    # 일치율이 높은 단어에 대한 index를 갖는 복지들 획득
                     list_recommend_welfare_index = WelIndex.objects.filter(indexId=recommend_index)
                     for recommend_welfare_index in list_recommend_welfare_index:
                         welfare_count = recommend_welfare.get(recommend_welfare_index.welId.welId)
+                        # 처음 검색된 복지일 때, 카운트 = 1
                         if welfare_count is None:
                             recommend_welfare[recommend_welfare_index.welId.welId] = 1
+                        # 이미 찾아진 복지일 떄, 카운트 += 1
                         else:
                             recommend_welfare[recommend_welfare_index.welId.welId] = welfare_count + 1
 
+            # 카운트가 높은 순으로 정렬
             recommend_welfares_sorted_by_count_desc = sorted(recommend_welfare, key=recommend_welfare.get, reverse=True)
+
+            # 카운트가 특정 수를 넘어야 추천
             recommend_welfare_dict = dict()
             for recommend_welfare_sorted_by_count_desc in recommend_welfares_sorted_by_count_desc:
                 if recommend_welfare.get(recommend_welfare_sorted_by_count_desc) >= total_count:
                     recommend_welfare_dict[recommend_welfare_sorted_by_count_desc] = recommend_welfare.get(
                         recommend_welfare_sorted_by_count_desc)
 
+            # 채팅이 어떻게 쪼개졌나 확인하기
             recommend_welfare_dict['chat tokenize'] = token_list
+
+            # 쪼개진 채팅을 토대로 어떤 단어가 유사하다고 나왔는지 확인
             for chat_token, similar_chat_token in dict_similar_tokens.items():
                 recommend_welfare_dict[chat_token] = similar_chat_token
+
+            # 이 데이터를 토대로 search에 대한 결과갑 반환
             return Response(recommend_welfare_dict)
 
+        # 이 데이터를 토대로 채팅 반환
         return ListModelMixin.list(self, request, *args, **kwargs)
