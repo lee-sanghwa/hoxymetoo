@@ -124,9 +124,9 @@ class ChatBotViewSet(viewsets.ModelViewSet):
                 # 사용자의 질문자체의 Noun에 대한 index정보 획득
                 try:
                     recommend_index = Index.objects.get(indexName=key)
-                # 사용자의 질문자체가 인덱스로 등록 안되어있는 경우에 대한 예외처리
+                # 사용자의 질문자체가 인덱스로 등록 안되어있는 경우에 대한 예외처
                 except Index.DoesNotExist:
-                    continue
+                    recommend_index = 1560
                 # 사용자의 질문자체의 Noun에 대한 index를 갖는 복지들 획득
                 list_recommend_welfare_index = WelIndex.objects.filter(indexId=recommend_index)
                 for recommend_welfare_index in list_recommend_welfare_index:
