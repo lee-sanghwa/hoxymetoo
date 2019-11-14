@@ -141,7 +141,10 @@ class ChatBotViewSet(viewsets.ModelViewSet):
                 # 사용자의 질문과 일치율이 높은 단어들에 대해서
                 for similar_key in similar_keys:
                     # 일치율이 높은 단어에 대한 index정보 획득
-                    recommend_index = Index.objects.get(indexName=similar_key[0])
+                    try:
+                        recommend_index = Index.objects.get(indexName=similar_key[0])
+                    except Index.DoesNotExist:
+                        recommend_index = 1560
                     # 일치율이 높은 단어에 대한 index를 갖는 복지들 획득
                     list_recommend_welfare_index = WelIndex.objects.filter(indexId=recommend_index)
                     for recommend_welfare_index in list_recommend_welfare_index:
