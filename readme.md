@@ -3,15 +3,15 @@
 ### Set up
 
 ```python
-cd /path/to/hoxymetoo
+cd /path/to/p1040_chatbot
 
 virtualenv venv
 
-source /path/to/hoxymetoo/venv/bin/activate
+source /path/to/p1040_chatbot/venv/bin/activate
 
 pip install -r requirements.txt
 
-cd /path/to/hoxymetoo/hoxymetoo
+cd /path/to/p1040_chatbot/hoxymetoo
 
 mkdir static
 
@@ -32,10 +32,15 @@ vim key.py # 보안을 위해 직접 관리
   # aes_key = ''
 ###################################################
 
-python /path/to/hoxymetoo/manage.py collectstatic
+python /path/to/p1040_chatbot/manage.py collectstatic
 
 sudo systemctl restart httpd
 
 # wget https://hoxymetoo.com/create-disable
 ```
 
+
+
+### Database EER Image
+
+<img src="./images/EER.svg" width="90%"></img>
