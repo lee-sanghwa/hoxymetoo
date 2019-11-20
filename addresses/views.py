@@ -1,3 +1,14 @@
+"""
+프로그램 ID:SV-1520-PY
+프로그램명:views.py
+작성자:이상화(developerjosephlee97@gmail.com)
+생성일자:2019-11-13
+버전:0.5
+설명:
+- 주소와 관련한 view 파일로, 클라이언트와 서버간의 통신이 이루어지는 부분이다.
+- 시,도 와 시,군,구에 대한 정보를 반환해준다.
+"""
+
 from addresses.models import SiDo, SiGunGu, Address
 from addresses.serializers import SiDoSerializer, SiGunGuSerializer, AddressSerializer
 from hoxymetoo.create_log import create_log_content
@@ -9,7 +20,7 @@ logger = logging.getLogger(__name__)
 
 
 class SiDoViewSet(viewsets.ModelViewSet):
-    queryset = SiDo.objects.all()
+    queryset = SiDo.objects.all().order_by('siDoName')
     serializer_class = SiDoSerializer
 
     def list(self, request, *args, **kwargs):
@@ -30,7 +41,7 @@ class SiDoViewSet(viewsets.ModelViewSet):
 
 
 class SiGunGuViewSet(viewsets.ModelViewSet):
-    queryset = SiGunGu.objects.all()
+    queryset = SiGunGu.objects.all().order_by('siGunGuName')
     serializer_class = SiGunGuSerializer
 
     def list(self, request, *args, **kwargs):
@@ -46,7 +57,9 @@ class SiGunGuViewSet(viewsets.ModelViewSet):
             JOIN Address ON Sigungu.sigunguid = Address.sigunguid
             WHERE Address.sidoid = (%s)
             AND Sigungu.siGunGuId != (%s)
+            ORDER BY siGunGuName
             """
+
             bon_cheung_id = '9999999'
             select_si_gun_gu_with_si_do_query = select_si_gun_gu_with_si_do_query % (si_do_id, bon_cheung_id)
             existing_queryset = SiGunGu.objects.raw(select_si_gun_gu_with_si_do_query)
@@ -69,7 +82,7 @@ class SiGunGuViewSet(viewsets.ModelViewSet):
 
 
 class AddressViewSet(viewsets.ModelViewSet):
-    queryset = Address.objects.all()
+    queryset = Address.objects.all().order_by('siDoSiGunGuName')
     serializer_class = AddressSerializer
 
     def list(self, request, *args, **kwargs):
