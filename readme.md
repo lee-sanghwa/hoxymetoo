@@ -29,7 +29,7 @@ vim key.py # 보안을 위해 직접 관리
   #        'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
   #    },
   # }
-  # aes_key = 'weAreTeamOfTurningWorld!10'
+  # aes_key = ''
 ###################################################
 
 python /path/to/hoxymetoo/manage.py collectstatic
