@@ -1,3 +1,13 @@
+"""
+프로그램 ID:SV-1500-PY
+프로그램명:models.py
+작성자:이상화(developerjosephlee97@gmail.com)
+생성일자:2019-11-13
+버전:0.5
+설명:
+- ERD를 통해 데이터베이스 스크립트를 생성하여 실제 데이터베이스에 만들어진 테이블들과 연동하기위한 것으로, 주소관련 내용을 다루고 있다.
+"""
+
 from django.db import models
 
 
