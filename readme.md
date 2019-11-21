@@ -2,7 +2,7 @@
 
 ## 1. 개요
 
-<img src="./images/SW_ad_font.jpeg"></img>
+<img src="./images/SW_ad_front.jpeg"></img>
 * * *
 <img src="./images/SW_ad_back.jpeg"></img>
 
