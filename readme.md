@@ -1,17 +1,20 @@
 # SWMaestro 10기 "돌아가는 세상" Django 서버 코드
 
-### 1. 개요
+## 1. 개요
 
-<img src="./images/SW_ad_front.jpeg"></img>
+<img src="./images/SW_ad_font.jpeg"></img>
 * * *
 <img src="./images/SW_ad_back.jpeg"></img>
 
+* * *
 
-### 2. aws 구성
+## 2. aws 구성
 
 <img src="./images/aws.png"></img>
 
-### 3. 환경 설정
+* * *
+
+## 3. 환경 설정
 
 
 ##### 깃에서 프로젝트를 다운받은 후 프로젝트 폴더로 이동
@@ -95,8 +98,22 @@ sudo systemctl restart httpd
 wget https://hoxymetoo.com/create-disable
 ```
 
+* * *
 
-
-### 3. Database EER Image
+## 4. Database EER Image
 
 <img src="./images/EER.svg"></img>
+
+* * *
+
+## 5. 대표적인 기능 (복지 추천 서비스)
+
+#### 설명
+1. 앱에서 사용자를 등록하거나 수정을 하기위해 HTTP METHOD 중 POST나 PATCH를 사용하여 서버에 요청을 보낸다. 
+2. 받은 값을 토대로 개인특성, 가정환경, 관심분야, 나이대별에 맞는 복지를 찾는다.
+3. 제일 많이 중복되는 복지 순으로 앱으로 전송한다.
+* * *
+
+<img src="./images/recom_wel.png"></img>
+
+* * *
