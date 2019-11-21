@@ -117,3 +117,15 @@ wget https://hoxymetoo.com/create-disable
 <img src="./images/recom_wel.png"></img>
 
 * * *
+
+## 6. 실제 예시
+
+아래는 현재 개발되어있는 api에 대한 목록입니다.
+
+사진을 클릭하시면 api를 직접 확인하실 수 있습니다.
+
+현재 앱에서 이 api를 사용중이므로 실제 데이터를 삭제하시거나 변경하지 말아주시기 바랍니다.
+
+[![api 루트로 이동](<img src="./images/api.png"></img>)](https://hoxymetoo.com/api)
+
+* * *
