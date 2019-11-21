@@ -2,9 +2,9 @@
 
 ### 1. 개요
 
-<img src="./images/SW_ad_front.png"></img>
+<img src="./images/SW_ad_front.jpeg"></img>
 * * *
-<img src="./images/SW_ad_back.png"></img>
+<img src="./images/SW_ad_back.jpeg"></img>
 
 
 ### 2. aws 구성
