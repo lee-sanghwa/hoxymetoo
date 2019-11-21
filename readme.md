@@ -108,7 +108,7 @@ wget https://hoxymetoo.com/create-disable
 
 ## 5. 대표적인 기능 (복지 추천 서비스)
 
-#### 설
+#### 설명
 1. 앱에서 사용자를 등록하거나 수정을 하기위해 HTTP METHOD 중 POST나 PATCH를 사용하여 서버에 요청을 보낸다. 
 2. 받은 값을 토대로 개인특성, 가정환경, 관심분야, 나이대별에 맞는 복지를 찾는다.
 3. 제일 많이 중복되는 복지 순으로 앱으로 전송한다.
@@ -126,6 +126,6 @@ wget https://hoxymetoo.com/create-disable
 
 현재 앱에서 이 api를 사용중이므로 실제 데이터를 삭제하시거나 변경하지 말아주시기 바랍니다.
 
-[![api 루트로 이동](<img src="./images/api.png"></img>)](https://hoxymetoo.com/api)
+[![api 루트로 이동](./images/api.png)](https://hoxymetoo.com/api)
 
 * * *
