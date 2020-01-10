@@ -9,6 +9,7 @@
 """
 
 import os
+from datetime import datetime
 from hoxymetoo.key import mysql_conf
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -39,10 +40,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'addresses',
     'members',
     'welfares',
     'qnas',
     'chatbot',
+    'receivableMoney',
     'debug_toolbar'
 ]
 
@@ -61,7 +64,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware'
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 ROOT_URLCONF = 'hoxymetoo.urls'
@@ -69,8 +72,7 @@ ROOT_URLCONF = 'hoxymetoo.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')]
-        ,
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -134,3 +136,57 @@ STATICFILES_DIRS = [
 ]
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+today_date = datetime.now().strftime("%Y-%m-%d")
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'common_format': {
+            'format': '[%(asctime)s] %(levelname)s [%(name)s:%(lineno)s] %(message)s',
+        },
+    },
+    'handlers': {
+        'http': {
+            'level': 'DEBUG',
+            'class': 'hoxymetoo.create_log.HttpHandler',
+            'formatter': 'common_format'
+        },
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'formatter': 'common_format',
+            'filename': f'{os.fspath(BASE_DIR)}/{today_date}_debug.log'
+        }
+    },
+    'loggers': {
+        'django.request': {
+            'handlers': ['http', 'file'],
+            'level': 'INFO'
+        },
+        'django.server': {
+            'handlers': ['http', 'file'],
+            'level': 'INFO'
+        },
+        'addresses': {
+            'handlers': ['file'],
+            'level': 'DEBUG',
+        },
+        'chatbot': {
+            'handlers': ['file'],
+            'level': 'DEBUG',
+        },
+        'members': {
+            'handlers': ['file'],
+            'level': 'DEBUG',
+        },
+        'receivableMoney': {
+            'handlers': ['file'],
+            'level': 'DEBUG',
+        },
+        'welfares': {
+            'handlers': ['file'],
+            'level': 'DEBUG',
+        },
+    },
+}

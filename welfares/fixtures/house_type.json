@@ -1,0 +1,52 @@
+[
+  {
+    "model": "welfares.Housetype",
+    "fields": {
+      "houseTypeId": "001",
+      "houseTypeName": "해당없음"
+    }
+  },
+  {
+    "model": "welfares.Housetype",
+    "fields": {
+      "houseTypeId": "002",
+      "houseTypeName": "한부모"
+    }
+  },
+  {
+    "model": "welfares.Housetype",
+    "fields": {
+      "houseTypeId": "003",
+      "houseTypeName": "다문화"
+    }
+  },
+  {
+    "model": "welfares.Housetype",
+    "fields": {
+      "houseTypeId": "004",
+      "houseTypeName": "조손"
+    }
+  },
+  {
+    "model": "welfares.Housetype",
+    "pk": 5,
+    "fields": {
+      "houseTypeId": "005",
+      "houseTypeName": "새터민"
+    }
+  },
+  {
+    "model": "welfares.Housetype",
+    "fields": {
+      "houseTypeId": "006",
+      "houseTypeName": "소년소녀가장"
+    }
+  },
+  {
+    "model": "welfares.Housetype",
+    "fields": {
+      "houseTypeId": "007",
+      "houseTypeName": "독거노인"
+    }
+  }
+]

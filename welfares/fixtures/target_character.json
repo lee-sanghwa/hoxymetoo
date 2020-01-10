@@ -1,0 +1,44 @@
+[
+  {
+    "model": "welfares.Targetcharacter",
+    "fields": {
+      "targetCharacterId": "001",
+      "targetCharacterName": "해당없음"
+    }
+  },
+  {
+    "model": "welfares.Targetcharacter",
+    "fields": {
+      "targetCharacterId": "002",
+      "targetCharacterName": "여성"
+    }
+  },
+  {
+    "model": "welfares.Targetcharacter",
+    "fields": {
+      "targetCharacterId": "003",
+      "targetCharacterName": "임산부"
+    }
+  },
+  {
+    "model": "welfares.Targetcharacter",
+    "fields": {
+      "targetCharacterId": "004",
+      "targetCharacterName": "장애"
+    }
+  },
+  {
+    "model": "welfares.Targetcharacter",
+    "fields": {
+      "targetCharacterId": "005",
+      "targetCharacterName": "국가유공자등 보훈대상자"
+    }
+  },
+  {
+    "model": "welfares.Targetcharacter",
+    "fields": {
+      "targetCharacterId": "006",
+      "targetCharacterName": "실업자"
+    }
+  }
+]

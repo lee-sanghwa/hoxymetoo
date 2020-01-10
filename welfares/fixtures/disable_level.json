@@ -1,50 +1,44 @@
 [
   {
-    "model": "welfares.Obstlvarray",
-    "pk": 1,
+    "model": "welfares.Disablelevel",
     "fields": {
-      "obstlvid": 1,
-      "obstlvname": "1급"
+      "disableLevelId": 1,
+      "disableLevelName": "1급"
     }
   },
   {
-    "model": "welfares.Obstlvarray",
-    "pk": 2,
+    "model": "welfares.Disablelevel",
     "fields": {
-      "obstlvid": 2,
-      "obstlvname": "2급"
+      "disableLevelId": 2,
+      "disableLevelName": "2급"
     }
   },
   {
-    "model": "welfares.Obstlvarray",
-    "pk": 3,
+    "model": "welfares.Disablelevel",
     "fields": {
-      "obstlvid": 3,
-      "obstlvname": "3급"
+      "disableLevelId": 3,
+      "disableLevelName": "3급"
     }
   },
   {
-    "model": "welfares.Obstlvarray",
-    "pk": 4,
+    "model": "welfares.Disablelevel",
     "fields": {
-      "obstlvid": 4,
-      "obstlvname": "4급"
+      "disableLevelId": 4,
+      "disableLevelName": "4급"
     }
   },
   {
-    "model": "welfares.Obstlvarray",
-    "pk": 5,
+    "model": "welfares.Disablelevel",
     "fields": {
-      "obstlvid": 5,
-      "obstlvname": "5급"
+      "disableLevelId": 5,
+      "disableLevelName": "5급"
     }
   },
   {
-    "model": "welfares.Obstlvarray",
-    "pk": 6,
+    "model": "welfares.Disablelevel",
     "fields": {
-      "obstlvid": 6,
-      "obstlvname": "6급"
+      "disableLevelId": 6,
+      "disableLevelName": "6급"
     }
   }
 ]

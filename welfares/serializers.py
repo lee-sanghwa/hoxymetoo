@@ -9,8 +9,9 @@
 """
 
 from rest_framework import serializers
-from welfares.models import Welfare, HouseType, WelHouseType, Disable, WelDisable, Desire, WelDesire, \
-    TargetCharacter, WelTargetCharacter, LifeCycle, WelLifeCycle, Responsible, WelResponsible
+from welfares.models import Welfare, HouseType, WelHouseType, DisableType, DisableLevel, Disable, WelDisable, Desire, \
+    WelDesire, TargetCharacter, WelTargetCharacter, LifeCycle, WelLifeCycle, Responsible, WelResponsible, Index, \
+    WelIndex
 
 
 class WelfareSerializer(serializers.ModelSerializer):
@@ -279,4 +280,58 @@ class WelfareSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Welfare
+        fields = '__all__'
+
+
+class IndexSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Index
+        fields = '__all__'
+
+
+class WelfareIndexSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = WelIndex
+        fields = '__all__'
+
+
+class DisableTypeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DisableType
+        fields = '__all__'
+
+
+class DisableLevelSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DisableLevel
+        fields = '__all__'
+
+
+class DisableSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Disable
+        fields = '__all__'
+
+
+class HouseTypeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = HouseType
+        fields = '__all__'
+
+
+class DesireSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Desire
+        fields = '__all__'
+
+
+class TargetCharacterSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TargetCharacter
+        fields = '__all__'
+
+
+class LifeCycleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = LifeCycle
         fields = '__all__'

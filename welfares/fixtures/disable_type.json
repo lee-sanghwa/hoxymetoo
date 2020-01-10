@@ -1,0 +1,107 @@
+[
+  {
+    "model": "welfares.Disabletype",
+    "fields": {
+      "disableTypeId": "10",
+      "disableTypeName": "지체"
+    }
+  },
+  {
+    "model": "welfares.Disabletype",
+    "fields": {
+      "disableTypeId": "20",
+      "disableTypeName": "시각"
+    }
+  },
+  {
+    "model": "welfares.Disabletype",
+    "fields": {
+      "disableTypeId": "30",
+      "disableTypeName": "청각"
+    }
+  },
+  {
+    "model": "welfares.Disabletype",
+    "fields": {
+      "disableTypeId": "40",
+      "disableTypeName": "언어"
+    }
+  },
+  {
+    "model": "welfares.Disabletype",
+    "fields": {
+      "disableTypeId": "50",
+      "disableTypeName": "지적"
+    }
+  },
+  {
+    "model": "welfares.Disabletype",
+    "fields": {
+      "disableTypeId": "60",
+      "disableTypeName": "뇌병변"
+    }
+  },
+  {
+    "model": "welfares.Disabletype",
+    "fields": {
+      "disableTypeId": "70",
+      "disableTypeName": "자폐성"
+    }
+  },
+  {
+    "model": "welfares.Disabletype",
+    "fields": {
+      "disableTypeId": "80",
+      "disableTypeName": "정신"
+    }
+  },
+  {
+    "model": "welfares.Disabletype",
+    "fields": {
+      "disableTypeId": "90",
+      "disableTypeName": "신장"
+    }
+  },
+  {
+    "model": "welfares.Disabletype",
+    "fields": {
+      "disableTypeId": "A0",
+      "disableTypeName": "심장"
+    }
+  },
+  {
+    "model": "welfares.Disabletype",
+    "fields": {
+      "disableTypeId": "B0",
+      "disableTypeName": "호흡기"
+    }
+  },
+  {
+    "model": "welfares.Disabletype",
+    "fields": {
+      "disableTypeId": "C0",
+      "disableTypeName": "간"
+    }
+  },
+  {
+    "model": "welfares.Disabletype",
+    "fields": {
+      "disableTypeId": "D0",
+      "disableTypeName": "안면"
+    }
+  },
+  {
+    "model": "welfares.Disabletype",
+    "fields": {
+      "disableTypeId": "E0",
+      "disableTypeName": "장루"
+    }
+  },
+  {
+    "model": "welfares.Disabletype",
+    "fields": {
+      "disableTypeId": "F0",
+      "disableTypeName": "간질"
+    }
+  }
+]
