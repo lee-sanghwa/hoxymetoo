@@ -15,7 +15,7 @@ idna==2.8
 jmespath==0.9.4
 JPype1==0.7.0
 konlpy==0.5.1
-numpy==1.17.2
+numpy==1.22.0
 PyMySQL==0.9.3
 python-dateutil==2.8.0
 requests==2.22.0
